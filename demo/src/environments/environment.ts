@@ -5,6 +5,8 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: location.origin,
-  isGitHub: true
+
+  // Set to null for internal data-souce.service
+  // or clone and start the demo project at https://github.com/vitocmpl/ng2-ya-table.DataSource.Core 
+  apiBaseUrl: location.origin //null
 };

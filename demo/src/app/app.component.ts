@@ -12,10 +12,6 @@ import { environment } from '../environments/environment';
 export class AppComponent {
   constructor(private client: DemoClient, private service: DataSourceService) { }
 
-  public isGitHubPages(): boolean{
-    return environment.isGitHub;
-  };
-
   public options:any = {
       orderMulti: false,
       className: ['table-striped'],
@@ -23,10 +19,10 @@ export class AppComponent {
   };
 
   public datasource: any = (request: DataSourceRequest): Observable<DataSourceResultOfUser> => {
-      if(this.isGitHubPages()){
-        return this.service.getUsersDataSource(request);
-      }
-      return this.client.get(DataSourceRequest.fromJS(request));
+    if(environment.apiBaseUrl){
+        return this.client.get(DataSourceRequest.fromJS(request));
+    }
+    return this.service.getUsersDataSource(request);
   }
 
   public paging: any = {
