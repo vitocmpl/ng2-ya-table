@@ -117,8 +117,7 @@ public columns:Array<any> = [
     },
     action: (data: any, row: User): any => {
         alert("Id: " + row.id);
-    },
-    width: "10px"
+    }
 },
 { 
     sort: false, 
@@ -131,10 +130,14 @@ public columns:Array<any> = [
     },
     action: (data: any, row: User): any => {
         alert("Id: " + row.id);
-    },
-    width: "10px"
+    }
 }];
 ```
+
+
+## Server-Side plugin
+
+.NET Core datasource utils [ng2-ya-table.DataSource.Core](https://github.com/vitocmpl/ng2-ya-table.DataSource.Core).
 
 
 ## Further Documentation
@@ -162,7 +165,7 @@ $ npm run lint
 * Filtering
 * Sorting
 * Pagination
-* Bootstrap layout
+* Bootstrap 3 layout
 
 
 ## License
