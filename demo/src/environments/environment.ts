@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: location.origin
+  apiBaseUrl: location.origin,
+  isGitHub: true
 };

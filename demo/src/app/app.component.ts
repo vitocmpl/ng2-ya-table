@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { DemoClient, DataSourceRequest, DataSourceResultOfUser, User } from "../../api/api.module";
+import { DataSourceService } from './data-source.service';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,17 +10,22 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(private client: DemoClient) { }
-  
-  title = 'app works!';
+  constructor(private client: DemoClient, private service: DataSourceService) { }
+
+  public isGitHubPages(): boolean{
+    return environment.isGitHub;
+  };
 
   public options:any = {
-      orderMulti: true,
+      orderMulti: false,
       className: ['table-striped'],
       language: "en"
   };
 
   public datasource: any = (request: DataSourceRequest): Observable<DataSourceResultOfUser> => {
+      if(this.isGitHubPages()){
+        return this.service.getUsersDataSource(request);
+      }
       return this.client.get(DataSourceRequest.fromJS(request));
   }
 

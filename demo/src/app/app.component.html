@@ -1,19 +1,36 @@
-<section class="page-header">
-  <h1 class="project-name">ng2-ya-table</h1>
-  <h2 class="project-tagline">Angular 2 yet another table library with sorting, filtering, pagination & datasource server-side ready.</h2>
-  
-  <a>Examples</a>
-  <a>Documentation</a>
-  <a target="_blank" href="https://github.com/vitocmpl/ng2-ya-table" class="btn">View on GitHub</a>
-</section>
-
-<section class="main-content">
-  <h3>Live Demo</h3>
+<nav *ngIf="isGitHubPages()" class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <span class="glyphicon glyphicon-home"></span>
+            </a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li>
+              <a>Examples</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav">
+          <li>
+              <a>Documentation</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav">
+          <li>
+              <a target="_blank" href="https://github.com/vitocmpl/ng2-ya-table">View on GitHub</a>
+          </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid">
+  <div class="page-header">
+    <h3>Live Demo</h3>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <ng2-ya-table [options]="options" [columns]="columns" [datasource]="datasource" [paging]="paging">
       </ng2-ya-table>
     </div>
   </div>
-</section>
+</div>
 

@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "nswag": "nswag swagger2tsclient /input:http://localhost:5000/swagger/v1/swagger.json /output:api/api.module.ts /template:Angular2"
+    "nswag": "nswag swagger2tsclient /input:http://localhost:5000/swagger/v1/swagger.json /output:api/api.module.ts /template:Angular2",
+    "build": "ng build --prod --base-href ng2-ya-table && cp-cli dist/index.html dist/404.html"
   },
   "bin":{
     "nswag": "node_modules/.bin/nswag"
