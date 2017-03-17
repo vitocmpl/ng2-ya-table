@@ -1,6 +1,14 @@
 # ng2-ya-table
 
-Angular 2 yet another table.
+Angular 2 yet another table with pagination, ordering, filtering and datasource server-side ready.
+
+
+### Demo
+
+<a target="_blank" href="https://vitocmpl.github.io/ng2-ya-table/">Live Demo</a>
+
+![alt tag](demo/src/assets/img/demo.gif)
+
 
 ## Installation
 
@@ -9,6 +17,7 @@ To install this library, run:
 ```bash
 $ npm install ng2-ya-table --save
 ```
+
 
 ## Minimal Setup Example
 
@@ -44,13 +53,13 @@ export class AppModule { }
 
 ```typescript
 public options:any = {
-    orderMulti: true,
+    orderMulti: false,
     className: ['table-striped'],
     language: "en"
 };
 
 public datasource: any = (request: any): Observable<any> => {
-    return this.userClient.getUsers(request);
+    return this.service.getUsers(request);
 }
 
 public paging: any = {
@@ -60,51 +69,78 @@ public paging: any = {
 }
 
 public columns:Array<any> = [
-  { 
-      title: 'Name', 
-      name: 'Name', 
-      sort: true, 
-      defaultSortOrder: 'asc',  
-      filter: {
-          type: 'default', 
-          controlType: 'default',
-          config: {
-              placeholder: 'Filter by name'
-          }
-      } 
-  },
-  { 
-      sort: false, 
-      title: '', 
-      name: 'btnEdit',
-      render: (data: any, row: any): string => {
-          return "<div class='text-center'>" +
-              "<button type='button' class='btn btn-sm btn-primary'><span class='glyphicon glyphicon-pencil'></span></button> " +
-              "</div>";
-      },
-      action: (data: any, row: any): any => {
-          ...
-      }
-  },
-  { 
-      sort: false, 
-      title: '', 
-      name: 'btnDelete',
-      render: (data: any, row: any): string => {
-          return "<div class='text-center'>" +
-              "<button type='button' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-trash'></span></button> " +
-              "</div>";
-      },
-      action: (data: any, row: any): any => {
-          ...
-      }
-  }
-];
+{ 
+    title: 'Name', 
+    name: 'name', 
+    sort: true, 
+    defaultSortOrder: 'asc',  
+    filter: {
+        type: 'default', 
+        controlType: 'default',
+        config: {
+            placeholder: 'Filter by name'
+        }
+    } 
+},
+{ 
+    title: 'Username', 
+    name: 'username', 
+    sort: true, 
+    filter: {
+        type: 'default', 
+        controlType: 'default',
+        config: {
+            placeholder: 'Filter by username'
+        }
+    } 
+},
+{ 
+    title: 'Email', 
+    name: 'email', 
+    sort: true, 
+    filter: {
+        type: 'default', 
+        controlType: 'default',
+        config: {
+            placeholder: 'Filter by email'
+        }
+    } 
+},
+{ 
+    sort: false, 
+    title: '', 
+    name: 'btnEdit',
+    render: (data: any, row: User): string => {
+        return "<div class='text-center'>" +
+            "<button type='button' class='btn btn-sm btn-primary'><span class='glyphicon glyphicon-pencil'></span></button> " +
+            "</div>";
+    },
+    action: (data: any, row: User): any => {
+        alert("Id: " + row.id);
+    },
+    width: "10px"
+},
+{ 
+    sort: false, 
+    title: '', 
+    name: 'btnDelete',
+    render: (data: any, row: User): string => {
+        return "<div class='text-center'>" +
+            "<button type='button' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-trash'></span></button> " +
+            "</div>";
+    },
+    action: (data: any, row: User): any => {
+        alert("Id: " + row.id);
+    },
+    width: "10px"
+}];
 ```
+
 
 ## Further Documentation
 
 Installation, customization and other useful articles will be available soon...
+
 
 ## Development
 
@@ -120,6 +156,15 @@ To lint all `*.ts` files:
 $ npm run lint
 ```
 
+
+## Features
+* Observable data source (client-side or server-side)
+* Filtering
+* Sorting
+* Pagination
+* Bootstrap layout
+
+
 ## License
 
-MIT ©
+[MIT](LICENSE) license.

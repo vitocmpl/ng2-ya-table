@@ -13,7 +13,7 @@ export class DataSourceService {
   }
   
   private getDataSource(url:string, request:any): Observable<any> {
-    let page = request.start > 0 ? ((request.start - 1) / request.length) : request.start;
+    let page = request.start > 0 ? (request.start / request.length) + 1 : request.start + 1;
     url += `_page=${page}&_limit=${request.length}&`;
 
     request.orders.forEach((order) => {
