@@ -1,9 +1,9 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {PaginationModule} from 'ng2-bootstrap/pagination';
-import {NG2_POWER_TABLE_DIRECTIVES} from './src/ng2-ya-table-directives';
-import {Ng2YaTableService} from './src/ng2-ya-table/ng2-ya-table.service';
+import {PaginationModule} from 'ngx-bootstrap';
+import {NG2_POWER_TABLE_DIRECTIVES} from './ng2-ya-table-directives';
+import {Ng2YaTableService} from './ng2-ya-table/ng2-ya-table.service';
 
 @NgModule({
   imports: [
