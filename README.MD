@@ -1,6 +1,6 @@
 # ng2-ya-table
 
-Angular 2 yet another table with pagination, ordering, filtering and datasource server-side ready.
+Angular 4 yet another table with pagination, ordering, filtering and datasource server-side ready.
 
 
 ### Demo
