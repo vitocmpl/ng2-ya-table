@@ -18,6 +18,18 @@ To install this library, run:
 $ npm install ng2-ya-table --save
 ```
 
+You will need bootstrap styles (Bootstrap 3)
+
+```
+<!-- index.html -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+```
+
+
+## How to use it with:
+ - `angular-cli` please refer to [getting-started-with-ng-cli](https://github.com/vitocmpl/ng2-ya-table/tree/master/docs/getting-started/ng-cli.md)
+ - ...
+
 
 ## Minimal Setup Example
 
@@ -147,10 +159,10 @@ Installation, customization and other useful articles will be available soon...
 
 ## Development
 
-To generate all `*.js`, `*.js.map` and `*.d.ts` files:
+To generate all `*.js`, `*.d.ts` and `*.metadata.json` files:
 
 ```bash
-$ npm run tsc
+$ npm run build
 ```
 
 To lint all `*.ts` files:
