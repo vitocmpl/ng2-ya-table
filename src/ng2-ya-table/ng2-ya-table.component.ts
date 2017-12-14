@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import { IDatasourceOrder, IDatasourceFilter, IDatasourceParameters, IDatasourceResult, ITableDataSource, ITableOptions, ITableColumn, ITablePaging, ColumnState } from './ng2-ya-table-interfaces';
 import { Ng2YaTableService } from './ng2-ya-table.service';
+import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'ng2-ya-table',
@@ -232,7 +234,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   processing:boolean = false;
   @Input() options: ITableOptions = null;
   @Input() rows:Array<any> | ITableDataSource = [];
-  @Input() datasource: ITableDataSource = null;
+  @Input() datasource: ITableDataSource | Array<any> = null;
   @Input() columns: Array<ITableColumn> = [];
   @Input() paging: ITablePaging = null;
 
@@ -301,7 +303,14 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
         fullTextFilter: this.state.fullTextFilter
       };
 
-      this.datasource(request).subscribe(
+      let observable: Observable<any> =  null;
+      if (this.datasource instanceof Array) {
+        observable = new Ng2YaTableLocalDataSource(this.datasource).asObservable(request);
+      } else {
+        observable = this.datasource(request);
+      }
+
+      observable.subscribe(
           (result: IDatasourceResult) => {
             this.rows = result.data;
             this.state.paging.recordsFiltered = result.recordsFiltered;

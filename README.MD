@@ -59,7 +59,7 @@ export class AppModule { }
 <h1>
   {{title}}
 </h1>
-<ng2-ya-table [options]="options" [columns]="columns" [datasource]="datasource" [paging]="paging">
+<ng2-ya-table [options]="options" [columns]="columns" [datasource]="data" [paging]="paging">
 </ng2-ya-table>
 ```
 
@@ -70,9 +70,7 @@ public options:any = {
     language: "en"
 };
 
-public datasource: any = (request: any): Observable<any> => {
-    return this.service.getUsers(request);
-}
+public data: Array<any> = [...]; //array of data
 
 public paging: any = {
     itemsPerPage: 10,
@@ -147,9 +145,23 @@ public columns:Array<any> = [
 ```
 
 
+## Server-Side datasource Setup Example
+
+```xml
+<ng2-ya-table [options]="options" [columns]="columns" [datasource]="datasource" [paging]="paging">
+</ng2-ya-table>
+```
+
+```typescript
+public datasource: any = (request: any): Observable<any> => {
+    return this.service.getUsers(request);
+}
+```
+
+
 ## Server-Side plugin
 
-.NET Core datasource utils [ng2-ya-table.DataSource.Core](https://github.com/vitocmpl/ng2-ya-table.DataSource.Core).
+.NET Standard library datasource utils [ng2-ya-table.DataSource.Core](https://github.com/vitocmpl/ng2-ya-table.DataSource.Core).
 
 
 ## Further Documentation
