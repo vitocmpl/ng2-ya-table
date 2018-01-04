@@ -250,14 +250,17 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnChanges (changes: SimpleChanges) : void {
-    if (changes['options'].isFirstChange()) {
-      this.state.setOptions(changes['options'].currentValue);
+    if (changes.options && changes.options.isFirstChange()) {
+      this.state.setOptions(changes.options.currentValue);
     }
-    if (changes['paging'].isFirstChange()) {
-      this.state.setPaging(changes['paging'].currentValue);
+    if (changes.paging && changes.paging.isFirstChange()) {
+      this.state.setPaging(changes.paging.currentValue);
     }
-    if (changes['columns'].isFirstChange()) {
-      this.state.setColumns(changes['columns'].currentValue);
+    if (changes.columns && changes.columns.isFirstChange()) {
+      this.state.setColumns(changes.columns.currentValue);
+    }
+    if(changes.datasource && !changes.datasource.isFirstChange()){
+      this.onChangeTable();
     }
   }
 
