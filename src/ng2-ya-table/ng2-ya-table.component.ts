@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
   selector: 'ng2-ya-table',
   template: `
     <div class="ng2-ya-table_wrapper form-inline dt-bootstrap no-footer">
-      <div class="row">
+      <div class="row col-12">
         <div class="col-md-6">
           <div class="ng2-ya-table_length">
             <label>
@@ -39,7 +39,7 @@ import { Observable } from 'rxjs/Observable';
         </div>
       </div>
 
-      <div class="row">
+      <div class="row col-12">
         <div class="col-md-12">
           <div *ngIf="processing" class="ng2-ya-table_processing panel panel-default">{{state.language.processing}}</div>
           <table class="table ng2-ya-table no-footer" ngClass="{{options.className || ''}}" role="grid" style="width: 100%;">
@@ -70,7 +70,7 @@ import { Observable } from 'rxjs/Observable';
         </div>
       </div>
 
-      <div class="row">
+      <div class="row col-12">
         <div class="col-md-6">
           <div *ngIf="rows.length > 0" class="ng2-ya-table_info" role="status">
             <span *ngFor="let s of state.language.info.split(' ')">
