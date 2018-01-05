@@ -28,8 +28,7 @@
     "core-js": "^2.4.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4",
-    "bootstrap": "^3.3.7",
-    "ng2-ya-table": "0.4.1"
+    "bootstrap": "^3.3.7"
   },
   "devDependencies": {
     "@angular/cli": "1.1.1",

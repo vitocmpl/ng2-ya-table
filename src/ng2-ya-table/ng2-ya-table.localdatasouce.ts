@@ -16,7 +16,7 @@ export class Ng2YaTableLocalDataSource {
     asObservable(request: IDatasourceParameters): Observable<any> {
         let filteredData = this.data;
         let defaultFilterColumns: IDatasourceFilter[] = request.filters.filter(p => p.type==='default' || p.type ==='text');
-        let page = (request.start * request.length) + 1;
+        let page = (request.start / request.length) + 1;
 
         if(request.fullTextFilter && defaultFilterColumns.length > 0) {
             filteredData = filteredData.filter((item) => {
