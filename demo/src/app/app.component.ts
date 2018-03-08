@@ -15,7 +15,8 @@ export class AppComponent {
   public options:any = {
       orderMulti: false,
       className: ['table-striped'],
-      language: "en"
+      language: "en",
+      search: true
   };
 
   public datasource: any = (request: DataSourceRequest): Observable<DataSourceResultOfUser> => {
@@ -28,7 +29,8 @@ export class AppComponent {
   public paging: any = {
       itemsPerPage: 10,
       itemsPerPageOptions: [5, 10, 25, 50, 100],
-      maxSize: 5
+      maxSize: 5,
+      showPaging: true
   }
 
   public columns:Array<any> = [

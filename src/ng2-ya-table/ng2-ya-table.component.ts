@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
       <div class="row col-12">
         <div class="col-md-6">
           <div class="ng2-ya-table_length">
-            <label>
+            <label *ngIf="paging.showPaging">
               <span *ngFor="let s of state.language.lengthMenu.split(' ')">
                 <span [ngSwitch]="s">
                   <select *ngSwitchCase="'_MENU_'" class="form-control input-sm" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
@@ -28,7 +28,7 @@ import { Observable } from 'rxjs/Observable';
           </div>
         </div>
         <div class="col-md-6">
-          <div class="ng2-ya-table_filter">
+          <div *ngIf="options.search" class="ng2-ya-table_filter">
             <label>
               <span>{{state.language.search}}</span>
               <input type="search" class="form-control input-sm"
