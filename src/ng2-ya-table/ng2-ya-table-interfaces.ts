@@ -8,12 +8,14 @@ export interface ITableOptions {
     language?: string | any;
     orderMulti?: boolean;
     className?: string;
+    search?: boolean;
 }
 
 export interface ITablePaging {
     itemsPerPageOptions: number[];
     itemsPerPage: number;
     maxSize:number;
+    showPaging: boolean;
 }
 
 export interface ITableDataSource {
