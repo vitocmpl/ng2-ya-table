@@ -72,29 +72,17 @@ export class AppComponent {
         sort: false, 
         title: '', 
         name: 'btnEdit',
-        render: (data: any, row: any): string => {
-            return "<div class='text-center'>" +
-                "<button type='button' class='btn btn-sm btn-primary'><span class='glyphicon glyphicon-pencil'></span></button> " +
-                "</div>";
-        },
-        action: (data: any, row: any): any => {
-          alert("Id: " + row.id);
-        },
         width: "10px"
     },
     { 
         sort: false, 
         title: '', 
         name: 'btnDelete',
-        render: (data: any, row: any): string => {
-            return "<div class='text-center'>" +
-                "<button type='button' class='btn btn-sm btn-danger'><span class='glyphicon glyphicon-trash'></span></button> " +
-                "</div>";
-        },
-        action: (data: any, row: any): any => {
-          alert("Id: " + row.id);
-        },
         width: "10px"
     }
   ];
+
+  onActionClick(row: number) {
+    alert("Id: " + row);
+  }
 }

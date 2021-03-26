@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DatasourceOrder, DatasourceFilter, DatasourceParameters, DatasourceResult, TableDataSource, TableOptions, TableColumn, TablePaging } from './ng2-ya-table-interfaces';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
+import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 
 @Component({
   selector: 'ng2-ya-table',
@@ -60,8 +61,21 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
                   </div>
                 </td>
               </tr>
-              <tr *ngFor="let row of rows">
-                <td (click)="cellClick(row, column)" *ngFor="let column of columns" [innerHtml]="sanitize(getHtml(row, column))"></td>
+              <tr *ngFor="let row of rows; index as i">
+                <td (click)="cellClick(row, column)" *ngFor="let column of columns">
+                  <ng-container
+                    [ngTemplateOutlet]="getCellTemplate(column, standardCell)"
+                    [ngTemplateOutletContext]="{
+                        row: row,
+                        rowIndex: i,
+                        data: getData(row, column.name),
+                        col: column
+                      }">
+                  </ng-container>
+                  <ng-template #standardCell let-data="data" let-col="col">
+                    <span>{{ getData(row, column.name) }}</span>
+                  </ng-template>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -234,6 +248,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() datasource: TableDataSource | Array<any> = null;
   @Input() columns: Array<TableColumn> = [];
   @Input() paging: TablePaging = null;
+  @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
   public constructor(private sanitizer:DomSanitizer, public state: Ng2YaTableService) { 
     this.fullTextFilterValueChanged.pipe(
@@ -347,5 +362,13 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
 
   onFullTextFilterValueChange(event: any){
     this.fullTextFilterValueChanged.next(event)
+  }
+
+  getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<any>): TemplateRef<any> {
+    let template = this.cellTemplates.filter(p => p.ngTableCellTemplate === col.name);
+    if (template.length > 0) {
+      return template.map(p => p.templateRef)[0];
+    }
+    return standardTemplate;
   }
 }
