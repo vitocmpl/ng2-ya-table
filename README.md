@@ -1,6 +1,6 @@
 # ng2-ya-table
 
-Angular 9+ yet another table with pagination, ordering, filtering and datasource server-side ready.
+Angular 11 yet another table with pagination, ordering, filtering and datasource server-side ready.
 
 
 ### Demo
@@ -12,21 +12,6 @@ Angular 9+ yet another table with pagination, ordering, filtering and datasource
 
 ## Installation
 
-To install this library, run:
-
-```bash
-$ npm install ng2-ya-table --save
-```
-
-You will need bootstrap styles (Bootstrap 3)
-
-```
-<!-- index.html -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-```
-
-
-## How to use it with:
  - `angular-cli` please refer to [getting-started-with-ng-cli](https://github.com/vitocmpl/ng2-ya-table/tree/master/docs/getting-started/ng-cli.md)
  - ...
 
@@ -45,8 +30,7 @@ import { Ng2YaTableModule } from 'ng2-ya-table';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    Ng2YaTableModule.forRoot()
+    Ng2YaTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -64,21 +48,21 @@ export class AppModule { }
 ```
 
 ```typescript
-public options:any = {
+public options: TableOptions = {
     orderMulti: false,
     className: ['table-striped'],
     language: "en"
 };
 
-public data: Array<any> = [...]; //array of data
+public data: any[] = [...]; //array of data
 
-public paging: any = {
+public paging: TablePaging = {
     itemsPerPage: 10,
     itemsPerPageOptions: [10, 25, 50, 100],
     maxSize: 5
 }
 
-public columns:Array<any> = [
+public columns: TableColumn[] = [
 { 
     title: 'Name', 
     name: 'name', 
@@ -153,7 +137,7 @@ public columns:Array<any> = [
 ```
 
 ```typescript
-public datasource: any = (request: any): Observable<any> => {
+public datasource: any = (request: DatasourceParameters): Observable<DatasourceResult> => {
     return this.service.getUsers(request);
 }
 ```
@@ -169,27 +153,12 @@ public datasource: any = (request: any): Observable<any> => {
 Installation, customization and other useful articles will be available soon...
 
 
-## Development
-
-To generate all `*.js`, `*.d.ts` and `*.metadata.json` files:
-
-```bash
-$ npm run build
-```
-
-To lint all `*.ts` files:
-
-```bash
-$ npm run lint
-```
-
-
 ## Features
 * Observable data source (client-side or server-side)
 * Filtering
 * Sorting
 * Pagination
-* Bootstrap 3 layout
+* Bootstrap 4 layout
 
 
 ## License

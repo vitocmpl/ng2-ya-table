@@ -9,9 +9,9 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 @Component({
   selector: 'ng2-ya-table',
   template: `
-    <div class="ng2-ya-table_wrapper form-inline dt-bootstrap no-footer">
-      <div class="row col-12">
-        <div class="col-md-6">
+    <div class="ng2-ya-table_wrapper cointainer">
+      <div class="row">
+        <div class="col-6">
           <div class="ng2-ya-table_length">
             <label *ngIf="paging.showPaging">
               <span *ngFor="let s of state.language.lengthMenu.split(' ')">
@@ -19,13 +19,13 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
                   <select *ngSwitchCase="'_MENU_'" class="form-control input-sm" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
                     <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
                   </select>
-                  <span *ngSwitchDefault>{{s}}</span>
+                  <span *ngSwitchDefault> {{s}} </span>
                 </span>
               </span>
             </label>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-6">
           <div *ngIf="options.search" class="ng2-ya-table_filter">
             <label>
               <span>{{state.language.search}}</span>
@@ -37,10 +37,10 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
         </div>
       </div>
 
-      <div class="row col-12">
-        <div class="col-md-12">
-          <div *ngIf="processing" class="ng2-ya-table_processing panel panel-default">{{state.language.processing}}</div>
-          <table class="table ng2-ya-table no-footer" ngClass="{{options.className || ''}}" role="grid" style="width: 100%;">
+      <div class="row">
+        <div class="col">
+          <div *ngIf="processing" class="ng2-ya-table_processing">{{state.language.processing}}</div>
+          <table class="table ng2-ya-table no-footer" ngClass="{{options.className || ''}}" role="grid">
             <thead>
               <tr role="row">
                 <th *ngFor="let column of state.columns" 
@@ -68,21 +68,21 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
         </div>
       </div>
 
-      <div class="row col-12">
-        <div class="col-md-6">
+      <div class="row">
+        <div class="col-6">
           <div *ngIf="rows.length > 0" class="ng2-ya-table_info" role="status">
             <span *ngFor="let s of state.language.info.split(' ')">
               <span [ngSwitch]="s">
-                <span *ngSwitchCase="'_START_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + 1}}</span>
-                <span *ngSwitchCase="'_END_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + rows.length}}</span>
-                <span *ngSwitchCase="'_TOTAL_'">{{state.paging.recordsFiltered}}</span>
-                <span *ngSwitchDefault>{{s}}</span>
+                <span *ngSwitchCase="'_START_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + 1}} </span>
+                <span *ngSwitchCase="'_END_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + rows.length}} </span>
+                <span *ngSwitchCase="'_TOTAL_'">{{state.paging.recordsFiltered}} </span>
+                <span *ngSwitchDefault>{{s}} </span>
               </span>
             </span>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="ng2-ya-table_paginate paging_simple_numbers">
+        <div class="col-6">
+          <div class="float-right ng2-ya-table_paginate paging_simple_numbers">
             <pagination *ngIf="rows.length > 0"
               [(ngModel)]="state.paging.currentPage"
               [totalItems]="state.paging.recordsFiltered"
@@ -192,23 +192,22 @@ import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
     table.ng2-ya-table thead .sorting_asc_disabled:after,
     table.ng2-ya-table thead .sorting_desc_disabled:after {
       position: absolute;
-      bottom: 8px;
+      bottom: 12px;
       right: 8px;
       display: block;
       font-family: 'Glyphicons Halflings';
       opacity: 0.5;
     }`,
     `table.ng2-ya-table thead .sorting:after {
-      opacity: 0.2;
-      content: "\\e150";
+      content: "";
       /* sort */
     }`,
     `table.ng2-ya-table thead .sorting_asc:after {
-      content: "\\e155";
+      content: "↑";
       /* sort-by-attributes */
     }`,
     `table.ng2-ya-table thead .sorting_desc:after {
-      content: "\\e156";
+      content: "↓";
       /* sort-by-attributes-alt */
     }`,
     `table.ng2-ya-table thead .sorting_asc_disabled:after,

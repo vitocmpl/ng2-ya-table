@@ -7,7 +7,7 @@ export type FILTER_CONTROL_TYPE = 'default' | 'list';
 export interface TableOptions {
     language?: string | any;
     orderMulti?: boolean;
-    className?: string;
+    className?: string | string[];
     search?: boolean;
 }
 
@@ -25,7 +25,7 @@ export interface TableDataSource {
 export interface TableColumn {
     name : string;
     title? : string;
-    width? : number;
+    width? : number | string;
     sort?: boolean;
     defaultSortOrder?: SORT_ORDER;
     filter?: TableColumnFilter;
