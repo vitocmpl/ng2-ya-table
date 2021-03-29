@@ -13,10 +13,10 @@ ng serve
 
 #### Adding ng2-ya-table
  
- - install `ng2-ya-table` and `bootstrap`
+ - install `ng2-ya-table`, `ngx-bootstrap` and `bootstrap`
 
  ```bash
-   npm install ng2-ya-table bootstrap --save
+   npm install ng2-ya-table ngx-bootstrap bootstrap --save
  ```
  
 - open `src/app/app.module.ts` and add
@@ -27,16 +27,16 @@ import { Ng2YaTableModule } from 'ng2-ya-table';
 
 @NgModule({
    ...
-   imports: [Ng2YaTableModule.forRoot(), ... ],
+   imports: [Ng2YaTableModule, ... ],
     ... 
 })
 ```
 
-- open `.angular-cli.json` and insert a new entry into the styles array 
+- open `angular.json` and insert a new entry into the styles array 
 
 ```json
       "styles": [
-         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+         "bootstrap/dist/css/bootstrap.min.css",
         "styles.css",
       ],
 ```

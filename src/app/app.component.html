@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">ng2-ya-table</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Examples</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Documentation</a>
+      </li>
+      <li>
+        <a class="nav-link" target="_blank" href="https://github.com/vitocmpl/ng2-ya-table">View on GitHub</a>
+    </li>
+    </ul>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="page-header">
+    <h3>Live Demo</h3>
+  </div>
+  <ng2-ya-table [options]="options" [columns]="columns" [datasource]="datasource" [paging]="paging">
+    <ng-template ng2YaTableCellTemplate="btnEdit" let-data='data' let-row='row'>
+      <div class='text-center'>
+        <button type='button' class='btn btn-sm btn-primary' (click)="onActionClick(row.id)">Edit</button>
+      </div>
+    </ng-template>
+    <ng-template ng2YaTableCellTemplate="btnDelete" let-data='data' let-row='row'>
+      <div class='text-center'>
+        <button type='button' class='btn btn-sm btn-danger' (click)="onActionClick(row.id)">Delete</button>
+      </div>
+    </ng-template>
+  </ng2-ya-table>
+</div>
+
