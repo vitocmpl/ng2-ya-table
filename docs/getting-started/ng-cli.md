@@ -36,7 +36,7 @@ import { Ng2YaTableModule } from 'ng2-ya-table';
 
 ```json
       "styles": [
-         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
+         "bootstrap/dist/css/bootstrap.min.css",
         "styles.css",
       ],
 ```
