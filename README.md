@@ -44,12 +44,12 @@ export class AppModule { }
   {{title}}
 </h1>
 <ng2-ya-table [options]="options" [columns]="columns" [datasource]="data" [paging]="paging">
-    <ng-template ngTableCellTemplate="btnEdit" let-data='data' let-row='row'>
+    <ng-template ng2YaTableCellTemplate="btnEdit" let-data='data' let-row='row'>
       <div class='text-center'>
         <button type='button' class='btn btn-sm btn-primary' (click)="onActionClick(row.id)">Edit</button>
       </div>
     </ng-template>
-    <ng-template ngTableCellTemplate="btnDelete" let-data='data' let-row='row'>
+    <ng-template ng2YaTableCellTemplate="btnDelete" let-data='data' let-row='row'>
       <div class='text-center'>
         <button type='button' class='btn btn-sm btn-danger' (click)="onActionClick(row.id)">Delete</button>
       </div>

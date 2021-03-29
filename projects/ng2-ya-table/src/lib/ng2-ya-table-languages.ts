@@ -22,5 +22,17 @@ export const Languages: any = {
             next: "Successivo",
             last: "Fine"
         }
+    },
+    es: {
+        processing: "Trabajando...",
+        search: "Buscar:",
+        lengthMenu: "Mostrar _MENU_ filas",
+        info: "Mostrando filas _START_ al _END_ de _TOTAL_ resultados",
+        pagination: {
+            first: "Primera",
+            previous: "Anterior",
+            next: "Siguiente",
+            last: "Última"
+        }
     }
 }

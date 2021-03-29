@@ -13,24 +13,22 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
     <div class="ng2-ya-table_wrapper cointainer">
       <div class="row">
         <div class="col-6">
-          <div class="ng2-ya-table_length">
-            <label *ngIf="paging.showPaging">
-              <span *ngFor="let s of state.language.lengthMenu.split(' ')">
-                <span [ngSwitch]="s">
-                  <select *ngSwitchCase="'_MENU_'" class="form-control input-sm" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
-                    <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
-                  </select>
-                  <span *ngSwitchDefault> {{s}} </span>
-                </span>
+          <label *ngIf="paging.showPaging">
+            <span *ngFor="let s of state.language.lengthMenu.split(' ')">
+              <span [ngSwitch]="s">
+                <select *ngSwitchCase="'_MENU_'" class="d-inline-block form-control input-sm" style="width:80px" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
+                  <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
+                </select>
+                <span *ngSwitchDefault> {{s}} </span>
               </span>
-            </label>
-          </div>
+            </span>
+          </label>
         </div>
         <div class="col-6">
-          <div *ngIf="options.search" class="ng2-ya-table_filter">
+          <div *ngIf="options.search" class="float-right">
             <label>
-              <span>{{state.language.search}}</span>
-              <input type="search" class="form-control input-sm"
+              <span>{{state.language.search}} </span>
+              <input type="search" class="d-inline-block form-control input-sm" style="width: auto"
                 [(ngModel)]="state.fullTextFilter"
                 (ngModelChange)="onFullTextFilterValueChange($event)"/>
             </label>
@@ -41,13 +39,13 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
       <div class="row">
         <div class="col">
           <div *ngIf="processing" class="ng2-ya-table_processing">{{state.language.processing}}</div>
-          <table class="table ng2-ya-table no-footer" ngClass="{{options.className || ''}}" role="grid">
+          <table class="table ng2-ya-table" ngClass="{{options.className || ''}}" role="grid">
             <thead>
               <tr role="row">
                 <th *ngFor="let column of state.columns" 
                   [style.width]="column.def.width"
                   [ngClass]="{'sorting_desc': column.sortOrder === 'desc', 'sorting_asc': column.sortOrder === 'asc', 'sorting': column.hasSort }"
-                  [ngTableSorting]="column">
+                  [ng2YaTableSorting]="column">
                   {{column.def.title}}
                 </th>
               </tr>
@@ -84,7 +82,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
 
       <div class="row">
         <div class="col-6">
-          <div *ngIf="rows.length > 0" class="ng2-ya-table_info" role="status">
+          <div *ngIf="rows.length > 0" role="status">
             <span *ngFor="let s of state.language.info.split(' ')">
               <span [ngSwitch]="s">
                 <span *ngSwitchCase="'_START_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + 1}} </span>
@@ -96,7 +94,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
           </div>
         </div>
         <div class="col-6">
-          <div class="float-right ng2-ya-table_paginate paging_simple_numbers">
+          <div class="float-right">
             <pagination *ngIf="rows.length > 0"
               [(ngModel)]="state.paging.currentPage"
               [totalItems]="state.paging.recordsFiltered"
@@ -115,61 +113,6 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
       </div>
     </div>`,
   styles: [
-    `table.ng2-ya-table {
-      clear: both;
-      margin-top: 6px !important;
-      margin-bottom: 6px !important;
-      max-width: none !important;
-      border-collapse: separate !important;
-    }`,
-    `table.ng2-ya-table td,
-    table.ng2-ya-table th {
-      -webkit-box-sizing: content-box;
-      box-sizing: content-box;
-    }`,
-    `table.ng2-ya-table td.ng2-ya-table_empty,
-    table.ng2-ya-table th.ng2-ya-table_empty {
-      text-align: center;
-    }`,
-    `table.ng2-ya-table.nowrap th,
-    table.ng2-ya-table.nowrap td {
-      white-space: nowrap;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_length label {
-      font-weight: normal;
-      text-align: left;
-      white-space: nowrap;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_length select {
-      width: 75px;
-      display: inline-block;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_filter {
-      text-align: right;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_filter label {
-      font-weight: normal;
-      white-space: nowrap;
-      text-align: left;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_filter input {
-      margin-left: 0.5em;
-      display: inline-block;
-      width: auto;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_info {
-      padding-top: 8px;
-      white-space: nowrap;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_paginate {
-      margin: 0;
-      white-space: nowrap;
-      text-align: right;
-    }`,
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_paginate ul.pagination {
-      margin: 2px 0;
-      white-space: nowrap;
-    }`,
     `div.ng2-ya-table_wrapper div.ng2-ya-table_processing {
       position: absolute;
       top: 50%;
@@ -188,10 +131,6 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
     table.ng2-ya-table thead > tr > td.sorting {
       padding-right: 30px;
     }`,
-    `table.ng2-ya-table thead > tr > th:active,
-    table.ng2-ya-table thead > tr > td:active {
-      outline: none;
-    }`,
     `table.ng2-ya-table thead .sorting,
     table.ng2-ya-table thead .sorting_asc,
     table.ng2-ya-table thead .sorting_desc,
@@ -209,32 +148,17 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
       bottom: 12px;
       right: 8px;
       display: block;
-      font-family: 'Glyphicons Halflings';
       opacity: 0.5;
-    }`,
-    `table.ng2-ya-table thead .sorting:after {
-      content: "";
-      /* sort */
     }`,
     `table.ng2-ya-table thead .sorting_asc:after {
       content: "↑";
-      /* sort-by-attributes */
     }`,
     `table.ng2-ya-table thead .sorting_desc:after {
       content: "↓";
-      /* sort-by-attributes-alt */
     }`,
     `table.ng2-ya-table thead .sorting_asc_disabled:after,
     table.ng2-ya-table thead .sorting_desc_disabled:after {
       color: #eee;
-    }`,
-    `@media screen and (max-width: 767px) {
-      div.ng2-ya-table_wrapper div.ng2-ya-table_length,
-      div.ng2-ya-table_wrapper div.ng2-ya-table_filter,
-      div.ng2-ya-table_wrapper div.ng2-ya-table_info,
-      div.ng2-ya-table_wrapper div.ng2-ya-table_paginate {
-        text-align: center;
-      }
     }`],
   providers: [Ng2YaTableService]
 })
@@ -365,7 +289,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<any>): TemplateRef<any> {
-    let template = this.cellTemplates.filter(p => p.ngTableCellTemplate === col.name);
+    let template = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === col.name);
     if (template.length > 0) {
       return template.map(p => p.templateRef)[0];
     }

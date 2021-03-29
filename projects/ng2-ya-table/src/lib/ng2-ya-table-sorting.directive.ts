@@ -1,12 +1,12 @@
 import { Directive, Input, HostListener } from '@angular/core';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 
-@Directive({selector: '[ngTableSorting]'})
+@Directive({selector: '[ng2YaTableSorting]'})
 export class Ng2YaTableSortingDirective {
 
   public constructor(private state: Ng2YaTableService) { }
 
-  @Input('ngTableSorting') 
+  @Input('ng2YaTableSorting') 
   public column: ColumnState;
 
   @HostListener('click', ['$event'])

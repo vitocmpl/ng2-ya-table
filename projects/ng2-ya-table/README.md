@@ -7,7 +7,7 @@ Angular 11 yet another table with pagination, ordering, filtering and datasource
 
 <a target="_blank" href="https://vitocmpl.github.io/ng2-ya-table/">Live Demo</a>
 
-![alt tag](demo/src/assets/img/demo.gif)
+![alt tag](https://github.com/vitocmpl/ng2-ya-table/blob/master/demo/src/assets/img/demo.gif)
 
 
 ## Installation
@@ -44,12 +44,12 @@ export class AppModule { }
   {{title}}
 </h1>
 <ng2-ya-table [options]="options" [columns]="columns" [datasource]="data" [paging]="paging">
-    <ng-template ngTableCellTemplate="btnEdit" let-data='data' let-row='row'>
+    <ng-template ng2YaTableCellTemplate="btnEdit" let-data='data' let-row='row'>
       <div class='text-center'>
         <button type='button' class='btn btn-sm btn-primary' (click)="onActionClick(row.id)">Edit</button>
       </div>
     </ng-template>
-    <ng-template ngTableCellTemplate="btnDelete" let-data='data' let-row='row'>
+    <ng-template ng2YaTableCellTemplate="btnDelete" let-data='data' let-row='row'>
       <div class='text-center'>
         <button type='button' class='btn btn-sm btn-danger' (click)="onActionClick(row.id)">Delete</button>
       </div>

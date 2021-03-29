@@ -17,7 +17,6 @@
     ],
     "paths": {
       "ng2-ya-table": [
-        "dist/ng2-ya-table",
         "projects/ng2-ya-table/src/public-api"
       ]
     }
