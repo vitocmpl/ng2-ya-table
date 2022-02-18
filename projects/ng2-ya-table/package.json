@@ -1,6 +1,6 @@
 {
   "name": "ng2-ya-table",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/vitocmpl/ng2-ya-table"
@@ -15,13 +15,10 @@
   "bugs": {
     "url": "https://github.com/vitocmpl/ng2-ya-table/issues"
   },
-  "dependencies": {
-    "tslib": "^2.0.0"
-  },
   "peerDependencies": {
-    "@angular/common": "^11.0.9",
-    "@angular/core": "^11.0.9",
+    "@angular/common": "^12.0.0",
+    "@angular/core": "^12.0.0",
     "bootstrap": "^4.6.0",
-    "ngx-bootstrap": "^6.2.0"
+    "ngx-bootstrap": "^7.1.0"
   }
 }

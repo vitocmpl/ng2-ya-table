@@ -1,13 +1,13 @@
 # ng2-ya-table
 
-Angular 11 yet another table with pagination, ordering, filtering and datasource server-side ready.
+Angular yet another table with pagination, ordering, filtering and datasource server-side ready.
 
 
 ### Demo
 
 <a target="_blank" href="https://vitocmpl.github.io/ng2-ya-table/">Live Demo</a>
 
-![alt tag](https://github.com/vitocmpl/ng2-ya-table/blob/master/demo/src/assets/img/demo.gif)
+![alt tag](https://github.com/vitocmpl/ng2-ya-table/blob/master/src/assets/img/demo.gif)
 
 
 ## Installation
