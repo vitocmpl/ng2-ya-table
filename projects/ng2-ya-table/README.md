@@ -154,7 +154,7 @@ Installation, customization and other useful articles will be available soon...
 * Filtering
 * Sorting
 * Pagination
-* Bootstrap 4 layout
+* Bootstrap 4 / 5 layout
 
 
 ## License
