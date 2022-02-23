@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -12,7 +12,8 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
   templateUrl: './ng2-ya-table.component.html',
   styleUrls: ['./ng2-ya-table.component.scss'],
   providers: [Ng2YaTableService],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   private subscription = new Subscription();
