@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 
@@ -12,22 +13,32 @@ import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
       [attr.max]="column.def.filter.config && column.def.filter.config.max ? column.def.filter.config.max : 524288"
       [attr.min]="column.def.filter.config && column.def.filter.config.min ? column.def.filter.config.min : 0"
       [attr.step]="column.def.filter.config && column.def.filter.config.step ? column.def.filter.config.step : 1"
-      [(ngModel)]="column.filterValue"
-      (ngModelChange)="onFilterValueChange($event)" />`
+      [formControl]="filter" />`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Ng2YaTableFilteringDefaultComponent {
-  filterValueChanged: Subject<any> = new Subject<any>();
+export class Ng2YaTableFilteringDefaultComponent implements OnInit, OnDestroy {
 
-  constructor(private state : Ng2YaTableService) {
-    this.filterValueChanged.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(filterValue => this.state.changeFilter(this.column));
-  }
-  
+  private subsription = new Subscription();
+
   @Input() public column: ColumnState;
 
-  onFilterValueChange(event: any){
-    this.filterValueChanged.next(event)
+  filter = new FormControl('');
+
+  constructor(private state : Ng2YaTableService) { 
+    this.subsription.add(this.filter.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(filterValue => {
+      this.column.filterValue = filterValue;
+      this.state.changeFilter(this.column);
+    }));
+  }
+
+  ngOnInit(): void {
+    this.filter.setValue(this.column.filterValue, { emitEvent: false });
+  }
+
+  ngOnDestroy(): void {
+    this.subsription.unsubscribe();
   }
 }

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DatasourceOrder, DatasourceFilter, DatasourceParameters, DatasourceResult, TableDataSource, TableOptions, TableColumn, TablePaging } from './ng2-ya-table-interfaces';
@@ -16,7 +16,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
           <label *ngIf="paging.showPaging">
             <span *ngFor="let s of state.language.lengthMenu.split(' ')">
               <span [ngSwitch]="s">
-                <select *ngSwitchCase="'_MENU_'" class="d-inline-block form-control input-sm" style="width:80px" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
+                <select *ngSwitchCase="'_MENU_'" class="d-inline-block form-control input-sm" style="width:80px" [formControl]="itemsPerPage">
                   <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
                 </select>
                 <span *ngSwitchDefault> {{s}} </span>
@@ -28,9 +28,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
           <div *ngIf="options.search" class="float-right">
             <label>
               <span>{{state.language.search}} </span>
-              <input type="search" class="d-inline-block form-control input-sm" style="width: auto"
-                [(ngModel)]="state.fullTextFilter"
-                (ngModelChange)="onFullTextFilterValueChange($event)"/>
+              <input type="search" class="d-inline-block form-control input-sm" style="width: auto" [formControl]="fullTextFilter" />
             </label>
           </div>
         </div>
@@ -96,13 +94,12 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
         <div class="col-6">
           <div class="float-right">
             <pagination *ngIf="rows.length > 0"
-              [(ngModel)]="state.paging.currentPage"
+              [formControl]="currentPage"
               [totalItems]="state.paging.recordsFiltered"
               [itemsPerPage]="state.paging.itemsPerPage"
               [maxSize]="paging.maxSize"
               [boundaryLinks]="false"
               [rotate]="false"
-              (pageChanged)="state.changePaging($event.page, $event.itemsPerPage)"
               [firstText] = "state.language.pagination.first"
               [lastText] = "state.language.pagination.last"
               [nextText] = "state.language.pagination.next"
@@ -160,13 +157,18 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
     table.ng2-ya-table thead .sorting_desc_disabled:after {
       color: #eee;
     }`],
-  providers: [Ng2YaTableService]
+  providers: [Ng2YaTableService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   private subscription = new Subscription();
   private fullTextFilterValueChanged: Subject<string> = new Subject<string>();
 
   processing:boolean = false;
+  itemsPerPage= new FormControl(0);
+  currentPage = new FormControl(1);
+  fullTextFilter = new FormControl('');
+
   @Input() options: TableOptions = null;
   @Input() rows:Array<any> | TableDataSource = [];
   @Input() datasource: TableDataSource | Array<any> = null;
@@ -174,15 +176,27 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() paging: TablePaging = null;
   @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
-  public constructor(public state: Ng2YaTableService) { 
-    this.subscription.add(this.fullTextFilterValueChanged.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(filterValue => this.onChangeTable()));
-  }
+  public constructor(public state: Ng2YaTableService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.subscription.add(this.state.stateChanged$.subscribe(() => this.onChangeTable()));
+    
+    this.subscription.add(this.itemsPerPage.valueChanges.subscribe(p => {
+      this.state.paging.itemsPerPage = p;
+      this.state.changePaging(1);
+    }));
+
+    this.subscription.add(this.fullTextFilter.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(filterValue => { 
+      this.state.fullTextFilter = filterValue;
+      this.onChangeTable();
+    }));
+
+    this.subscription.add(this.currentPage.valueChanges.subscribe(p => { 
+      this.state.changePaging(p);
+    }));
   }
 
   ngOnChanges (changes: SimpleChanges) : void {
@@ -191,6 +205,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     }
     if (changes.paging && changes.paging.isFirstChange()) {
       this.state.setPaging(changes.paging.currentValue);
+      this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false })
     }
     if (changes.columns && changes.columns.isFirstChange()) {
       this.state.setColumns(changes.columns.currentValue);
@@ -247,6 +262,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
 
       observable.subscribe(
           (result: DatasourceResult) => {
+            this.cdRef.markForCheck(); 
             this.rows = result.data;
             this.state.paging.recordsFiltered = result.recordsFiltered;
             this.state.paging.recordsTotal = result.recordsTotal;

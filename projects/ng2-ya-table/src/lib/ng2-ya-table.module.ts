@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 import { Ng2YaTableFilteringDefaultComponent } from './ng2-ya-table-filtering-default.component';
@@ -19,7 +19,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
   ],
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     PaginationModule
   ],
   exports: [
