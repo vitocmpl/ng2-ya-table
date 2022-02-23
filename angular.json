@@ -5,7 +5,11 @@
   "projects": {
     "ng2-ya-table-demo": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -115,6 +119,11 @@
     },
     "ng2-ya-table": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/ng2-ya-table",
       "sourceRoot": "projects/ng2-ya-table/src",
       "prefix": "lib",

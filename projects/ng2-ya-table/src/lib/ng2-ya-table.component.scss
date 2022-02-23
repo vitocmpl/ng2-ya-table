@@ -1,0 +1,40 @@
+.ng2-ya-table_wrapper {
+  .ng2-ya-table_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+    margin-top: -26px;
+    text-align: center;
+    padding: 1em 0;
+  }
+
+  .ng2-ya-table {
+    .sorting_asc, 
+    .sorting_desc, 
+    .sorting {
+      padding-right: 2rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .sorting:after,
+    .sorting_asc:after,
+    .sorting_desc:after {
+      position: absolute;
+      bottom: 12px;
+      right: 8px;
+      display: block;
+      opacity: 0.5;
+    }
+
+    .sorting_asc:after {
+      content: "↑";
+    }
+
+    .sorting_desc:after {
+      content: "↓";
+    }
+  }
+}
