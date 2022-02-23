@@ -7,5 +7,5 @@ export class Ng2YaTableCellTemplateDirective {
 
   @Input() public ng2YaTableCellTemplate: string;
 
-  constructor(public templateRef: TemplateRef<any>) { }
+  constructor(public templateRef: TemplateRef<HTMLElement>) { }
 }

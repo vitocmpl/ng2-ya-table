@@ -8,11 +8,12 @@ import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
         [(ngModel)]="column.filterValue"
         (ngModelChange)="state.changeFilter(column)">
           <option value="">{{ column.def.filter.configList.nullText }}</option>
-          <option *ngFor="let item of column.def.filter.configList.list" [value]="item.value">{{item.text}}</option>
+          <option *ngFor="let item of column.def.filter.configList.list | async" [value]="item.value">{{item.text}}</option>
     </select>`
 })
 export class Ng2YaTableFilteringListComponent {
-  constructor(public state : Ng2YaTableService) {}
-  
+
   @Input() public column: ColumnState;
+
+  constructor(public state : Ng2YaTableService) {}
 }

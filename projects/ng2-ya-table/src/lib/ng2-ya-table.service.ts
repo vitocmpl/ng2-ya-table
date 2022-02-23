@@ -19,8 +19,8 @@ export interface ColumnState {
 }
 
 const sortCycle : SORT_ORDER[] = ['asc', 'desc', null];
-const getNextSortOrder : Function = function(currentSortOrder : SORT_ORDER) : SORT_ORDER {
-  let nextIndex : number = (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
+const getNextSortOrder = (currentSortOrder : SORT_ORDER) : SORT_ORDER =>  {
+  let nextIndex = (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
   return sortCycle[nextIndex];
 };
 

@@ -163,7 +163,7 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
   providers: [Ng2YaTableService]
 })
 export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
-  private subscription : Subscription;
+  private subscription = new Subscription();
   private fullTextFilterValueChanged: Subject<string> = new Subject<string>();
 
   processing:boolean = false;
@@ -174,15 +174,15 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() paging: TablePaging = null;
   @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
-  public constructor(private sanitizer:DomSanitizer, public state: Ng2YaTableService) { 
-    this.fullTextFilterValueChanged.pipe(
+  public constructor(public state: Ng2YaTableService) { 
+    this.subscription.add(this.fullTextFilterValueChanged.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(filterValue => this.onChangeTable());
+    ).subscribe(filterValue => this.onChangeTable()));
   }
 
   ngOnInit() {
-    this.subscription = this.state.stateChanged$.subscribe(() => this.onChangeTable());
+    this.subscription.add(this.state.stateChanged$.subscribe(() => this.onChangeTable()));
   }
 
   ngOnChanges (changes: SimpleChanges) : void {
@@ -202,10 +202,6 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
 
   ngOnDestroy () : void {
     this.subscription.unsubscribe();
-  }
-
-  public sanitize(html:string):SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   public onChangeTable():void {
@@ -265,16 +261,11 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public getHtml(row:any, column:TableColumn): string {
-    if(column.render){
-      let data: any = this.getData(row, column.name);
-      return column.render(data, row);
+  public getData(row: any, propertyName: string): string {
+    if(!!propertyName) {
+      return propertyName.split('.').reduce((prev:any, curr:string) => prev[curr], row);
     }
-    return this.getData(row, column.name);
-  }
-
-  public getData(row:any, propertyName:string):string {
-    return propertyName.split('.').reduce((prev:any, curr:string) => prev[curr], row);
+    return null;
   }
 
   public cellClick(row:any, column:TableColumn):void {
@@ -288,10 +279,12 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     this.fullTextFilterValueChanged.next(event)
   }
 
-  getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<any>): TemplateRef<any> {
-    let template = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === col.name);
-    if (template.length > 0) {
-      return template.map(p => p.templateRef)[0];
+  getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<HTMLElement>): TemplateRef<HTMLElement> {
+    if(!!col.template || !!col.name) {
+      const templates = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === (!!col.template ? col.template : col.name));
+      if (templates.length > 0) {
+        return templates.map(p => p.templateRef)[0];
+      }
     }
     return standardTemplate;
   }

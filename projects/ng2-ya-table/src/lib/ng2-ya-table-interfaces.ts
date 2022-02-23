@@ -5,7 +5,7 @@ export type FILTER_TYPE = 'default' | 'text' | 'range' | 'daterange' | 'equals' 
 export type FILTER_CONTROL_TYPE = 'default' | 'list';
 
 export interface TableOptions {
-    language?: string | any;
+    language?: string | LanguagesMap;
     orderMulti?: boolean;
     className?: string | string[];
     search?: boolean;
@@ -23,7 +23,7 @@ export interface TableDataSource {
 }
 
 export interface TableColumn {
-    name : string;
+    name? : string;
     title? : string;
     width? : number | string;
     sort?: boolean;
@@ -31,6 +31,7 @@ export interface TableColumn {
     filter?: TableColumnFilter;
     render?: TableColumnRender;
     action?: TableColumnAction;
+    template?: string;
 }
 
 export interface TableColumnFilter {
@@ -50,7 +51,12 @@ export interface TableColumnFilterDefault {
 
 export interface TableColumnFilterList {
     nullText?:string;
-    list: any[];
+    list: Observable<TableColumnFilterListItem[]>;
+}
+
+export interface TableColumnFilterListItem {
+    value: string | number | symbol;
+    text: string
 }
 
 export interface TableColumnRender {
@@ -80,8 +86,16 @@ export interface DatasourceOrder {
     dir: SORT_ORDER;
 }
 
-export interface DatasourceResult { 
+export interface DatasourceResult<T = any> { 
     recordsTotal: number; 
     recordsFiltered: number; 
-    data: any[];
+    data: T[];
+}
+
+export interface LanguageMap {
+    [key: string]: string | LanguageMap;
+}
+
+export interface LanguagesMap {
+    [culture: string]: LanguageMap;
 }

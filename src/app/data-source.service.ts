@@ -3,19 +3,41 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { DatasourceParameters, DatasourceResult } from 'ng2-ya-table';
+
+export interface UserDto {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: {
+    city: string;
+  };
+}
+
 @Injectable()
 export class DataSourceService {
 
+  private url = "https://jsonplaceholder.typicode.com/users";
+
   constructor(private http: HttpClient) { }
 
-  getUsersDataSource(request:any): Observable<any> {
-    let url = 'https://jsonplaceholder.typicode.com/users?';
-    return this.getDataSource(url, request);
+  getUsersDataSource(request: DatasourceParameters): Observable<DatasourceResult<UserDto>> {
+    return this.getDataSource(this.url, request);
+  }
+
+  getCities(): Observable<string[]> {
+    return this.http.get<UserDto[]>(this.url).pipe(
+      map(result => {
+        const cities = [...new Set(result.map(r => r.address?.city))];
+        return cities;
+      }
+    ));
   }
   
-  private getDataSource(url:string, request:any): Observable<any> {
-    let page = request.start > 0 ? (request.start / request.length) + 1 : request.start + 1;
-    url += `_page=${page}&_limit=${request.length}&`;
+  private getDataSource(url: string, request: DatasourceParameters): Observable<DatasourceResult<UserDto>> {
+    const page = request.start > 0 ? (request.start / request.length) + 1 : request.start + 1;
+    url += `?_page=${page}&_limit=${request.length}&`;
 
     request.orders.forEach((order) => {
       url += `_sort=${order.name}&_order=${order.dir.toUpperCase()}&`;
@@ -31,15 +53,16 @@ export class DataSourceService {
       url += `q=${request.fullTextFilter}&`;
     }
 
-    return this.http.get(url, {observe: 'response'}).pipe(
+    return this.http.get<UserDto[]>(url, {observe: 'response'}).pipe(
       map(res => {
-        let data = res.body;
-        let count = res.headers.get('x-total-count');
-        return {
+        const data = res.body;
+        const count = +res.headers.get('x-total-count');
+        const result: DatasourceResult<UserDto> = {
           recordsTotal: count,
           recordsFiltered: count,
           data: data
         };
+        return result;
       })
     );
   }

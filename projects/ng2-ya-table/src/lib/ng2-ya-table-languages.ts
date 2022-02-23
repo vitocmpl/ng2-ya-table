@@ -1,4 +1,6 @@
-export const Languages: any = {
+import { LanguagesMap } from "./ng2-ya-table-interfaces";
+
+export const Languages: LanguagesMap = {
     en: {
         processing: "Processing...",
         search: "Search:",
