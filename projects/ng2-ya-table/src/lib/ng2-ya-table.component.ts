@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DatasourceOrder, DatasourceFilter, DatasourceParameters, DatasourceResult, TableDataSource, TableOptions, TableColumn, TablePaging } from './ng2-ya-table-interfaces';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
@@ -162,7 +162,6 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
 })
 export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
   private subscription = new Subscription();
-  private fullTextFilterValueChanged: Subject<string> = new Subject<string>();
 
   processing:boolean = false;
   itemsPerPage= new FormControl(0);
@@ -289,10 +288,6 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
       let data = this.getData(row, column.name);
       column.action(data, row);
     }
-  }
-
-  onFullTextFilterValueChange(event: any){
-    this.fullTextFilterValueChanged.next(event)
   }
 
   getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<HTMLElement>): TemplateRef<HTMLElement> {

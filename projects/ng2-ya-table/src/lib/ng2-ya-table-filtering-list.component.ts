@@ -14,14 +14,14 @@ import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 })
 export class Ng2YaTableFilteringListComponent implements OnInit, OnDestroy {
 
-  private subsription = new Subscription();
+  private subscription = new Subscription();
   
   @Input() public column: ColumnState;
 
   filter = new FormControl('');
 
   constructor(public state : Ng2YaTableService) {
-    this.subsription.add(this.filter.valueChanges.subscribe(filterValue => {
+    this.subscription.add(this.filter.valueChanges.subscribe(filterValue => {
       this.column.filterValue = filterValue;
       this.state.changeFilter(this.column);
     }));
@@ -32,6 +32,6 @@ export class Ng2YaTableFilteringListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subsription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
