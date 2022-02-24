@@ -1,4 +1,4 @@
-<select class="form-control" style="width: 100%" [formControl]="filter">
-    <option value="">{{ column.def.filter.configList.nullText }}</option>
-    <option *ngFor="let item of column.def.filter.configList.list | async" [value]="item.value">{{ item.text }}</option>
+<select class="form-control form-select w100" [formControl]="filter">
+    <option value="">{{ column.def.filter.configList?.nullText }}</option>
+    <option *ngFor="let item of column.def.filter.configList?.list | async" [value]="item.value">{{ item.text }}</option>
 </select>
