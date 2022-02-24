@@ -1,8 +1,8 @@
 <input class="form-control w-100"
     [attr.type]="column.def.filter.config?.type || 'text'"
-    [attr.placeholder]="column.def.filter.config?.placeholder || ''"
-    [attr.max]="column.def.filter.config?.max || 524288"
-    [attr.min]="column.def.filter.config?.min || 0"
-    [attr.step]="column.def.filter.config?.step || 1"
+    [attr.placeholder]="column.def.filter.config?.placeholder"
+    [attr.max]="column.def.filter.config?.max"
+    [attr.min]="column.def.filter.config?.min"
+    [attr.step]="column.def.filter.config?.step"
     [formControl]="filter" 
 />

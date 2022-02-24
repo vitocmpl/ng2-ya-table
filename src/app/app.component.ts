@@ -92,13 +92,13 @@ export class AppComponent {
             sort: false,
             title: '',
             template: 'btnEdit',
-            width: "1rem"
+            width: "5rem"
         },
         {
             sort: false,
             title: '',
             template: 'btnDelete',
-            width: "1rem"
+            width: "5rem"
         }
     ];
 
