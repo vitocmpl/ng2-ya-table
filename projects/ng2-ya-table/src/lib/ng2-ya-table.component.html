@@ -49,16 +49,7 @@
     </table>
 
     <div *ngIf="rows.length > 0" class="ng2-ya-table-pagination-result">
-        <span *ngFor="let s of state.language.info.split(' ')">
-            <span [ngSwitch]="s">
-                <span *ngSwitchCase="'_START_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage +
-                    1}} </span>
-                <span *ngSwitchCase="'_END_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage +
-                    rows.length}} </span>
-                <span *ngSwitchCase="'_TOTAL_'">{{state.paging.recordsFiltered}} </span>
-                <span *ngSwitchDefault>{{s}} </span>
-            </span>
-        </span>
+        <span>{{ getPaginationResult() }}</span>
     </div>
     <div class="ng2-ya-table-pagination">
         <select *ngIf="paging.showPaging" class="form-control form-select" [formControl]="itemsPerPage">

@@ -154,4 +154,12 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     }
     return standardTemplate;
   }
+
+  getPaginationResult() {
+    return this.state.interpolateLocalization(this.state.language.info as string, {
+      start: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage + 1,
+      end: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage + this.rows.length,
+      total: this.state.paging.recordsFiltered
+    });
+  }
 }

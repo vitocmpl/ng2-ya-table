@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TableOptions, TablePaging, TableColumn, SORT_ORDER } from './ng2-ya-table-interfaces';
+import { TableOptions, TablePaging, TableColumn, SORT_ORDER, LanguageMap } from './ng2-ya-table-interfaces';
 import { Languages } from './ng2-ya-table-languages';
 
 export interface PagingState {
@@ -27,6 +27,7 @@ const getNextSortOrder = (currentSortOrder : SORT_ORDER) : SORT_ORDER =>  {
 @Injectable()
 export class Ng2YaTableService {
   private stateChangedSource : BehaviorSubject<Ng2YaTableService> = new BehaviorSubject<Ng2YaTableService>(this);
+  private localizationInterpolationMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
   
   stateChanged$: Observable<Ng2YaTableService>;
   showFilterRow: boolean = false;
@@ -35,7 +36,7 @@ export class Ng2YaTableService {
   paging: PagingState;
   sortStack: ColumnState[] = [];
   fullTextFilter: string;
-  language: any = null;
+  language: LanguageMap = null;
 
   constructor() {
     this.stateChanged$ = this.stateChangedSource.asObservable();
@@ -111,5 +112,12 @@ export class Ng2YaTableService {
 
   public notify () : void {
     this.stateChangedSource.next(this);
+  }
+
+  interpolateLocalization(str: string, params: any) {
+    return str.replace(this.localizationInterpolationMatcher, (substring: string, b: string) => {
+      let r = params[b];
+      return !!r ? r : substring;
+    });
   }
 }

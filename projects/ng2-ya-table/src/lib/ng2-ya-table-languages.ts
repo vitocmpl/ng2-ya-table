@@ -3,7 +3,7 @@ import { LanguagesMap } from "./ng2-ya-table-interfaces";
 export const Languages: LanguagesMap = {
     en: {
         search: "Search...",
-        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+        info: "Showing {{start}} to {{end}} of {{total}} entries",
         pagination: {
             first: "First",
             previous: "Previous",
@@ -13,7 +13,7 @@ export const Languages: LanguagesMap = {
       },
     it: {
         search: "Cerca...",
-        info: "Visualizzati da _START_ a _END_ di _TOTAL_ elementi",
+        info: "Visualizzati da {{start}} a {{end}} di {{total}} elementi",
         pagination: {
             first: "Inizio",
             previous: "Precedente",
@@ -23,7 +23,7 @@ export const Languages: LanguagesMap = {
     },
     es: {
         search: "Buscar...",
-        info: "Mostrando filas _START_ al _END_ de _TOTAL_ resultados",
+        info: "Mostrando filas {{start}} al {{end}} de {{total}} resultados",
         pagination: {
             first: "Primera",
             previous: "Anterior",
