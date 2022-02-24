@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -15,19 +15,51 @@ import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.di
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
+export class Ng2YaTableComponent implements OnDestroy, OnInit {
   private subscription = new Subscription();
+  private _options : TableOptions = null;
+  private _datasource: TableDataSource | any[] = null;
+  private _columns: TableColumn[] = [];
+  private _paging: TablePaging = null;
 
   processing:boolean = false;
   itemsPerPage= new FormControl(0);
   currentPage = new FormControl(1);
   fullTextFilter = new FormControl('');
+  rows = [];
 
-  @Input() options: TableOptions = null;
-  @Input() rows:Array<any> | TableDataSource = [];
-  @Input() datasource: TableDataSource | Array<any> = null;
-  @Input() columns: Array<TableColumn> = [];
-  @Input() paging: TablePaging = null;
+  @Input() set options(value: TableOptions) {
+    this._options = value;
+    this.state.setOptions(value);
+  }
+  get options(): TableOptions {
+    return this._options;
+  }
+
+  @Input() set datasource(value: TableDataSource | any[]) {
+    this._datasource = value;
+  }
+  get datasource(): TableDataSource | any[] {
+    return this._datasource;
+  }
+  
+  @Input() set columns(value: TableColumn[]) {
+    this._columns = value;
+    this.state.setColumns(value);
+  }
+  get columns(): TableColumn[] {
+    return this._columns;
+  }
+
+  @Input() set paging(value: TablePaging) {
+    this._paging = value;
+    this.state.setPaging(value);
+    this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
+  }
+  get paging(): TablePaging {
+    return this._paging;
+  }
+
   @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
   public constructor(public state: Ng2YaTableService, private cdRef: ChangeDetectorRef) { }
@@ -37,7 +69,7 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     
     this.subscription.add(this.itemsPerPage.valueChanges.subscribe(p => {
       this.state.paging.itemsPerPage = p;
-      this.state.changePaging(1);
+      this.currentPage.setValue(1);
     }));
 
     this.subscription.add(this.fullTextFilter.valueChanges.pipe(
@@ -51,22 +83,6 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     this.subscription.add(this.currentPage.valueChanges.subscribe(p => { 
       this.state.changePaging(p);
     }));
-  }
-
-  ngOnChanges (changes: SimpleChanges) : void {
-    if (changes.options && changes.options.isFirstChange()) {
-      this.state.setOptions(changes.options.currentValue);
-    }
-    if (changes.paging && changes.paging.isFirstChange()) {
-      this.state.setPaging(changes.paging.currentValue);
-      this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false })
-    }
-    if (changes.columns && changes.columns.isFirstChange()) {
-      this.state.setColumns(changes.columns.currentValue);
-    }
-    if(changes.datasource && !changes.datasource.isFirstChange()){
-      this.onChangeTable();
-    }
   }
 
   ngOnDestroy () : void {
