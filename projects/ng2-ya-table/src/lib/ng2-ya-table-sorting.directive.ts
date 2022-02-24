@@ -1,20 +1,18 @@
-import { Directive, Input, HostListener } from '@angular/core';
+import { Directive, Input, HostListener, Output, EventEmitter } from '@angular/core';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 
 @Directive({selector: '[ng2YaTableSorting]'})
 export class Ng2YaTableSortingDirective {
 
-  constructor(private service: Ng2YaTableService) { }
-
-  @Input('ng2YaTableSorting') 
-  column: ColumnState;
+  @Input('ng2YaTableSorting') column: ColumnState;
+  @Output() toggled = new EventEmitter<boolean>();
 
   @HostListener('click', ['$event'])
   onToggleSort(event: MouseEvent): void {
     if (event) {
       event.preventDefault();
     }
-    this.service.toggleSort(this.column, event.shiftKey);
+    this.toggled.emit(event.shiftKey);
   }
 
   @HostListener('mousedown', ['$event'])

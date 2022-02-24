@@ -105,7 +105,8 @@ export class Ng2YaTableService {
       this.notify();
   }
 
-  public changeFilter(column: ColumnState){
+  changeFilter(column: ColumnState, filterValue: any) {
+    column.filterValue = filterValue;
     this.paging.currentPage = 1;
     this.notify();
   }

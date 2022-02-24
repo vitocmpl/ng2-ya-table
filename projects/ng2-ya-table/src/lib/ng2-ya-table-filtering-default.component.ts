@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { TableColumnFilterDefault } from './ng2-ya-table-interfaces';
-import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
+import { ColumnState } from './ng2-ya-table.service';
 
 @Component({
   selector: 'ng2-ya-table-filter-default',
@@ -15,24 +15,21 @@ export class Ng2YaTableFilteringDefaultComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  @Input() public column: ColumnState;
+  @Input() column: ColumnState;
+  @Output() filterValueChanged = new EventEmitter();
 
   filter = new FormControl('');
   config: TableColumnFilterDefault;
 
-  constructor(private state : Ng2YaTableService) { 
+  ngOnInit(): void {
+    this.config = this.column.def.filter.config as TableColumnFilterDefault;
+
     this.subscription.add(this.filter.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
     ).subscribe(filterValue => {
-      this.column.filterValue = filterValue;
-      this.state.changeFilter(this.column);
+      this.filterValueChanged.emit(filterValue);
     }));
-  }
-
-  ngOnInit(): void {
-    this.filter.setValue(this.column.filterValue, { emitEvent: false });
-    this.config = this.column.def.filter.config as TableColumnFilterDefault;
   }
 
   ngOnDestroy(): void {

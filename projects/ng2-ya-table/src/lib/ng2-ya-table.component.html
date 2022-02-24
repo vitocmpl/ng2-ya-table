@@ -14,7 +14,8 @@
                 <th *ngFor="let column of state.columns" 
                     [style.width]="column.def.width"
                     [ngClass]="{'sorting-desc': column.sortOrder === 'desc', 'sorting-asc': column.sortOrder === 'asc', 'sorting': column.hasSort }"
-                    [ng2YaTableSorting]="column">
+                    [ng2YaTableSorting]="column"
+                    (toggled)="state.toggleSort(column, $event)">
                     {{column.def.title}}
                 </th>
             </tr>
@@ -23,9 +24,9 @@
             <tr *ngIf="state.showFilterRow">
                 <td *ngFor="let column of state.columns">
                     <div *ngIf="column.def.filter" [ngSwitch]="column.def.filter.controlType">
-                        <ng2-ya-table-filter-list *ngSwitchCase="'list'" [column]="column">
+                        <ng2-ya-table-filter-list *ngSwitchCase="'list'" [column]="column" (filterValueChanged)="state.changeFilter(column, $event)">
                         </ng2-ya-table-filter-list>
-                        <ng2-ya-table-filter-default *ngSwitchDefault [column]="column">
+                        <ng2-ya-table-filter-default *ngSwitchDefault [column]="column" (filterValueChanged)="state.changeFilter(column, $event)">
                         </ng2-ya-table-filter-default>
                     </div>
                 </td>
