@@ -39,9 +39,9 @@ export class DataSourceService {
     const page = request.start > 0 ? (request.start / request.length) + 1 : request.start + 1;
     url += `?_page=${page}&_limit=${request.length}&`;
 
-    request.orders.forEach((order) => {
-      url += `_sort=${order.name}&_order=${order.dir.toUpperCase()}&`;
-    });
+    if(request.orders.length > 0) {
+      url += `_sort=${request.orders.map(o => o.name).join(",")}&_order=${request.orders.map(o => o.dir.toUpperCase()).join(",")}&`;
+    }
 
     request.filters.forEach((filter) => {
       if (filter.value) {

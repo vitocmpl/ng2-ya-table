@@ -78,10 +78,10 @@ export class Ng2YaTableService {
     };
   }
 
-  public toggleSort(colState : ColumnState, orderMulti : boolean): void {
+  public toggleSort(colState : ColumnState, shiftPressed : boolean): void {
     colState.sortOrder = getNextSortOrder(colState.sortOrder);
 
-    if (orderMulti) {
+    if (shiftPressed && this.orderMulti) {
       let curIndex : number = this.sortStack.indexOf(colState);
       if (curIndex === -1) {
         this.sortStack.push(colState);

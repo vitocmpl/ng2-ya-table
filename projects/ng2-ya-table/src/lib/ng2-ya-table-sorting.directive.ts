@@ -4,21 +4,21 @@ import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
 @Directive({selector: '[ng2YaTableSorting]'})
 export class Ng2YaTableSortingDirective {
 
-  public constructor(private state: Ng2YaTableService) { }
+  constructor(private service: Ng2YaTableService) { }
 
   @Input('ng2YaTableSorting') 
-  public column: ColumnState;
+  column: ColumnState;
 
   @HostListener('click', ['$event'])
-  public onToggleSort(event:any):void {
+  onToggleSort(event: MouseEvent): void {
     if (event) {
       event.preventDefault();
     }
-    this.state.toggleSort(this.column, event.shiftKey && this.state.orderMulti);
+    this.service.toggleSort(this.column, event.shiftKey);
   }
 
   @HostListener('mousedown', ['$event'])
-  public onDisableMouseDown(event:any):void {
+  onDisableMouseDown(event: MouseEvent): void {
     if (event) {
       event.preventDefault();
     }
