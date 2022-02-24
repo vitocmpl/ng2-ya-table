@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 export type SORT_ORDER = 'asc' | 'desc';
 export type FILTER_TYPE = 'default' | 'text' | 'range' | 'daterange' | 'equals' | 'collection';
 export type FILTER_CONTROL_TYPE = 'default' | 'list';
+export type FILTER_DEFAULT_CONTROL_TYPE = 'text' | 'number' | 'date' | 'time';
 
 export interface TableOptions {
     language?: string | LanguagesMap;
@@ -14,7 +15,7 @@ export interface TableOptions {
 export interface TablePaging {
     itemsPerPageOptions: number[];
     itemsPerPage: number;
-    maxSize:number;
+    maxSize: number;
     showPaging: boolean;
 }
 
@@ -23,9 +24,9 @@ export interface TableDataSource {
 }
 
 export interface TableColumn {
-    name? : string;
-    title? : string;
-    width? : number | string;
+    name?: string;
+    title?: string;
+    width?: number | string;
     sort?: boolean;
     defaultSortOrder?: SORT_ORDER;
     filter?: TableColumnFilter;
@@ -35,13 +36,12 @@ export interface TableColumn {
 export interface TableColumnFilter {
     type: FILTER_TYPE;
     controlType: FILTER_CONTROL_TYPE;
-    config?: TableColumnFilterDefault;
-    configList?: TableColumnFilterList;
+    config?: TableColumnFilterDefault | TableColumnFilterList;
 }
 
 export interface TableColumnFilterDefault {
     placeholder?: string;
-    type?:string;
+    type?: FILTER_DEFAULT_CONTROL_TYPE;
     max?: number | Date;
     min?: number | Date;
     step?: number;

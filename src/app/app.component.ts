@@ -78,9 +78,9 @@ export class AppComponent {
             name: "address.city",
             sort: true,
             filter: {
-                type: "collection",
+                type: 'default',
                 controlType: "list",
-                configList: {
+                config: {
                     list: this.service.getCities().pipe(map(result => {
                         return result.map(c => {
                             const item: TableColumnFilterListItem = {
