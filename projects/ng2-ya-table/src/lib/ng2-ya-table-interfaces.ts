@@ -29,8 +29,6 @@ export interface TableColumn {
     sort?: boolean;
     defaultSortOrder?: SORT_ORDER;
     filter?: TableColumnFilter;
-    render?: TableColumnRender;
-    action?: TableColumnAction;
     template?: string;
 }
 
@@ -57,14 +55,6 @@ export interface TableColumnFilterList {
 export interface TableColumnFilterListItem {
     value: string | number | symbol;
     text: string
-}
-
-export interface TableColumnRender {
-    (value: any, row: Object): string;
-}
-
-export interface TableColumnAction {
-    (value: any, row: Object): void;
 }
 
 export interface DatasourceParameters { 

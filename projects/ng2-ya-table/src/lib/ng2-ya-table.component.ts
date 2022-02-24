@@ -138,13 +138,6 @@ export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
     return null;
   }
 
-  public cellClick(row:any, column:TableColumn):void {
-    if(column.action){
-      let data = this.getData(row, column.name);
-      column.action(data, row);
-    }
-  }
-
   getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<HTMLElement>): TemplateRef<HTMLElement> {
     if(!!col.template || !!col.name) {
       const templates = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === (!!col.template ? col.template : col.name));
