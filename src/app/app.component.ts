@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DataSourceService, UserDto } from './data-source.service';
 import { Observable } from 'rxjs';
 import { DatasourceParameters, DatasourceResult, TableColumn, TableColumnFilterListItem, TableDataSource, TableOptions, TablePaging } from 'ng2-ya-table';
+import { faHome, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -11,6 +12,10 @@ import { map } from 'rxjs/operators';
     providers: [DataSourceService]
 })
 export class AppComponent {
+
+    faHome = faHome;
+    faTrash = faTrash;
+    faEdit = faEdit;
 
     options: TableOptions = {
         orderMulti: false,
@@ -92,13 +97,13 @@ export class AppComponent {
             sort: false,
             title: '',
             template: 'btnEdit',
-            width: "5rem"
+            width: "3rem"
         },
         {
             sort: false,
             title: '',
             template: 'btnDelete',
-            width: "5rem"
+            width: "3rem"
         }
     ];
 
