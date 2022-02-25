@@ -1,6 +1,5 @@
-import { TableDataSource } from 'dist/ng2-ya-table/public-api';
 import { of } from 'rxjs';
-import { DatasourceParameters, DatasourceFilter } from './ng2-ya-table-interfaces';
+import { DatasourceParameters, DatasourceFilter, TableDataSource } from './ng2-ya-table-interfaces';
 
 export class Ng2YaTableLocalDataSource {
     private data: any[] = [];

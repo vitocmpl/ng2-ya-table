@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DatasourceParameters } from 'dist/ng2-ya-table/public-api';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { TableColumn, SORT_ORDER, TableDataSource, DatasourceOrder, DatasourceFilter } from './ng2-ya-table-interfaces';
+import { TableColumn, SORT_ORDER, TableDataSource, DatasourceOrder, DatasourceFilter, DatasourceParameters } from './ng2-ya-table-interfaces';
 import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 
 export interface ColumnState {
