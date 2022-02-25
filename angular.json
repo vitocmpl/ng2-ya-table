@@ -86,6 +86,16 @@
             "browserTarget": "ng2-ya-table-demo:build"
           }
         },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "./tsconfig.spec.json",
+            "globalMocks": [
+              "getComputedStyle",
+              "styleTransform"
+            ]
+          }
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {

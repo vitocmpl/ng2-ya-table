@@ -5,8 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test:lib": "jest --config ./projects/ng2-ya-table/jest.config.js",
-    "test": "jest --config ./jest.config.js",
+    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -30,6 +29,7 @@
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-builders/jest": "^13.0.3",
     "@angular-devkit/build-angular": "~13.2.4",
     "@angular/cli": "~13.2.4",
     "@angular/compiler-cli": "~13.2.3",
