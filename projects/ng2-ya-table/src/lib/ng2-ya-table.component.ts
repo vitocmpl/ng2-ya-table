@@ -1,153 +1,118 @@
-import { Component, Input, OnInit, OnDestroy, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { DatasourceOrder, DatasourceFilter, DatasourceParameters, DatasourceResult, TableDataSource, TableOptions, TableColumn, TablePaging } from './ng2-ya-table-interfaces';
+
+import { PageChangedEvent, PaginationComponent } from 'ngx-bootstrap/pagination';
+
+import { TableDataSource, TableOptions, TableColumn, TablePaging, LanguageMap } from './ng2-ya-table-interfaces';
 import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
-import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
+import { Languages } from './ng2-ya-table-languages';
 
 @Component({
   selector: 'ng2-ya-table',
   templateUrl: './ng2-ya-table.component.html',
   styleUrls: ['./ng2-ya-table.component.scss'],
-  providers: [Ng2YaTableService],
+  providers: [ Ng2YaTableService ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
 export class Ng2YaTableComponent implements OnDestroy, OnInit {
   private subscription = new Subscription();
-  private _options : TableOptions = null;
-  private _datasource: TableDataSource | any[] = null;
-  private _columns: TableColumn[] = [];
-  private _paging: TablePaging = null;
 
-  processing:boolean = false;
   itemsPerPage= new FormControl(0);
-  currentPage = new FormControl(1);
   fullTextFilter = new FormControl('');
+  
+  language: LanguageMap = null;
+  showFilterRow = false;
+  processing = false;
   rows = [];
+  currentPage = 1;
+  recordsFiltered = 0;
+  recordsTotal = 0;
 
-  @Input() set options(value: TableOptions) {
-    this._options = value;
-    this.state.setOptions(value);
-  }
-  get options(): TableOptions {
-    return this._options;
-  }
+  @Input() options: TableOptions;
+  @Input() paging: TablePaging;
 
   @Input() set datasource(value: TableDataSource | any[]) {
-    this._datasource = value;
-  }
-  get datasource(): TableDataSource | any[] {
-    return this._datasource;
+    this.service.setDataSource(value);
   }
   
   @Input() set columns(value: TableColumn[]) {
-    this._columns = value;
-    this.state.setColumns(value);
+    this.showFilterRow = value.some(c => !!c.filter);
+    this.service.setColumns(value);
   }
-  get columns(): TableColumn[] {
-    return this._columns;
-  }
-
-  @Input() set paging(value: TablePaging) {
-    this._paging = value;
-    this.state.setPaging(value);
-    this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
-  }
-  get paging(): TablePaging {
-    return this._paging;
+  get cols(): ColumnState[] {
+    return this.service.columns;
   }
 
+  @ViewChild(PaginationComponent) pagination: PaginationComponent;
   @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
-  public constructor(public state: Ng2YaTableService, private cdRef: ChangeDetectorRef) { }
+  public constructor(private service: Ng2YaTableService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.subscription.add(this.state.stateChanged$.subscribe(() => this.onChangeTable()));
-    
-    this.subscription.add(this.itemsPerPage.valueChanges.subscribe(p => {
-      this.state.paging.itemsPerPage = p;
-      this.currentPage.setValue(1);
-    }));
+    this.language = typeof this.options?.language ==="string" ? Languages[this.options?.language] : this.options?.language;
 
     this.subscription.add(this.fullTextFilter.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged()
     ).subscribe(filterValue => { 
-      this.state.fullTextFilter = filterValue;
-      this.onChangeTable();
+      this.service.request({ 
+        fullTextFilter: filterValue,
+        start: 0
+      });
     }));
 
-    this.subscription.add(this.currentPage.valueChanges.subscribe(p => { 
-      this.state.changePaging(p);
+    this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
+    this.subscription.add(this.itemsPerPage.valueChanges.subscribe(itemsPerPage => {
+      const page = this.pagination.page;
+      this.pagination.itemsPerPage = itemsPerPage;
+      if(page === this.pagination.page) {
+        this.service.request({ 
+          start: (page - 1) * itemsPerPage,
+          length: itemsPerPage
+        });
+      }
     }));
+
+    this.subscription.add(this.service.result$.subscribe(result => {
+      this.cdRef.markForCheck(); 
+      this.rows = result.data;
+      this.recordsFiltered = result.recordsFiltered;
+      this.recordsTotal = result.recordsTotal;
+    }));
+
+    this.subscription.add(this.service.processing$.subscribe(result => {
+      this.cdRef.markForCheck(); 
+      this.processing = result;
+    }));
+
+    this.service.request({});
   }
 
   ngOnDestroy () : void {
     this.subscription.unsubscribe();
   }
 
-  public onChangeTable():void {
-    if(this.datasource)
-    {
-      this.processing = true;
-
-      let orders: Array<DatasourceOrder> = new Array<DatasourceOrder>();
-      this.state.sortStack.forEach((column:ColumnState) => {
-        let order: DatasourceOrder = {
-          dir: column.sortOrder,
-          name: column.def.name
-        };
-        orders.push(order);
-      });
-
-      let filters: Array<DatasourceFilter> = new Array<DatasourceFilter>();
-      this.state.columns.forEach((column: ColumnState) => {
-        if(column.hasFilter) {
-          let filter: DatasourceFilter = {
-            name: column.def.name,
-            type: column.def.filter.type,
-            value: column.filterValue
-          };
-          filters.push(filter);
-        }
-      });
-
-      let request: DatasourceParameters = { 
-        start: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage, 
-        length: this.state.paging.itemsPerPage,
-        filters: filters,
-        orders: orders,
-        fullTextFilter: this.state.fullTextFilter
-      };
-
-      let observable: Observable<any> =  null;
-      if (this.datasource instanceof Array) {
-        observable = new Ng2YaTableLocalDataSource(this.datasource).asObservable(request);
-      } else {
-        observable = this.datasource(request);
-      }
-
-      observable.subscribe(
-          (result: DatasourceResult) => {
-            this.cdRef.markForCheck(); 
-            this.rows = result.data;
-            this.state.paging.recordsFiltered = result.recordsFiltered;
-            this.state.paging.recordsTotal = result.recordsTotal;
-          },
-          error => {
-            console.log(error);
-          },
-          () => {
-            this.processing = false;
-          }
-      );
-    }
+  onPageChanged(event: PageChangedEvent) {
+    this.currentPage = event.page;
+    this.service.request({ 
+      start: (event.page - 1) * event.itemsPerPage,
+      length: event.itemsPerPage
+    });
   }
 
-  public getData(row: any, propertyName: string): string {
+  onToggleSort(col: ColumnState, shiftKey: true) {
+    this.service.toggleSort(col, shiftKey && this.options.orderMulti);
+  }
+
+  onChangeFilter(col: ColumnState, filterValue: any) {
+    this.service.changeFilter(col, filterValue);
+  }
+
+  getData(row: any, propertyName: string): string {
     if(!!propertyName) {
       return propertyName.split('.').reduce((prev:any, curr:string) => prev[curr], row);
     }
@@ -165,10 +130,10 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   }
 
   getPaginationResult() {
-    return this.state.interpolateLocalization(this.state.language.info as string, {
-      start: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage + 1,
-      end: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage + this.rows.length,
-      total: this.state.paging.recordsFiltered
+    return this.service.interpolateLocalization(this.language.info as string, {
+      start: (this.currentPage - 1) * this.itemsPerPage.value + 1,
+      end: (this.currentPage - 1) * this.itemsPerPage.value + this.rows.length,
+      total: this.recordsFiltered
     });
   }
 }

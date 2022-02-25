@@ -18,7 +18,7 @@ export class AppComponent {
     faEdit = faEdit;
 
     options: TableOptions = {
-        orderMulti: false,
+        orderMulti: true,
         className: ['table-striped'],
         language: "en",
         search: true

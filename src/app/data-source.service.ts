@@ -26,8 +26,12 @@ export class DataSourceService {
     return this.getDataSource(this.url, request);
   }
 
+  getUsers(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(this.url);
+  }
+
   getCities(): Observable<string[]> {
-    return this.http.get<UserDto[]>(this.url).pipe(
+    return this.getUsers().pipe(
       map(result => {
         const cities = [...new Set(result.map(r => r.address?.city))];
         return cities;

@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { TableOptions, TablePaging, TableColumn, SORT_ORDER, LanguageMap } from './ng2-ya-table-interfaces';
-import { Languages } from './ng2-ya-table-languages';
-
-export interface PagingState {
-  currentPage:number;
-  itemsPerPage: number;
-  recordsTotal: number; 
-  recordsFiltered: number; 
-}
+import { DatasourceParameters } from 'dist/ng2-ya-table/public-api';
+import { Subject } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { TableColumn, SORT_ORDER, TableDataSource, DatasourceOrder, DatasourceFilter } from './ng2-ya-table-interfaces';
+import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 
 export interface ColumnState {
   filterValue : any;
@@ -20,38 +15,55 @@ export interface ColumnState {
 
 const sortCycle : SORT_ORDER[] = ['asc', 'desc', null];
 const getNextSortOrder = (currentSortOrder : SORT_ORDER) : SORT_ORDER =>  {
-  let nextIndex = (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
+  const nextIndex = (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
   return sortCycle[nextIndex];
+};
+
+const defaultRequestParams : DatasourceParameters = {
+  start: 0,
+  length: 10,
+  filters: [],
+  orders: [],
+  fullTextFilter: ""
 };
 
 @Injectable()
 export class Ng2YaTableService {
-  private stateChangedSource : BehaviorSubject<Ng2YaTableService> = new BehaviorSubject<Ng2YaTableService>(this);
+
   private localizationInterpolationMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
+  private lastRequestParams = defaultRequestParams;
   
-  stateChanged$: Observable<Ng2YaTableService>;
-  showFilterRow: boolean = false;
-  orderMulti: boolean = true;
-  columns: ColumnState[];
-  paging: PagingState;
+  private dataSource: TableDataSource;
+  private requestSubject$ = new Subject<DatasourceParameters>();
+  private processingSubject$ = new Subject<boolean>();
+  
+  columns: ColumnState[] = [];
   sortStack: ColumnState[] = [];
-  fullTextFilter: string;
-  language: LanguageMap = null;
 
-  constructor() {
-    this.stateChanged$ = this.stateChangedSource.asObservable();
+  result$ = this.requestSubject$.pipe(
+    tap(() => this.processingSubject$.next(true)),
+    switchMap(request => {
+      return this.dataSource(request);
+    }),
+    tap(() => this.processingSubject$.next(false))
+  );
+
+  processing$ = this.processingSubject$.asObservable();
+
+  setDataSource(datasource: TableDataSource | any[]) {
+    const needRequest = !!this.dataSource;
+    if (datasource instanceof Array) {
+      this.dataSource = new Ng2YaTableLocalDataSource(datasource).toDataSource();
+    } else {
+      this.dataSource = datasource;
+    }
+    if(needRequest) {
+      this.request({});
+    }
   }
 
-  public setOptions(options: TableOptions): void{
-    this.orderMulti = !!options.orderMulti ? options.orderMulti : true;
-    this.language = typeof options.language ==="string" ? Languages[options.language] : options.language;
-  }
-
-  public setColumns (columns : Array<TableColumn>): void {
+  setColumns(columns : TableColumn[]): void {
     this.columns = columns.map(c => {
-      if (!!c.filter) {
-        this.showFilterRow = true;
-      }
 
       let column: ColumnState = {
         filterValue: null,
@@ -69,50 +81,54 @@ export class Ng2YaTableService {
     });
   }
 
-  public setPaging(paging: TablePaging): void {
-    this.paging = {
-      currentPage: 1,
-      itemsPerPage: paging.itemsPerPage,
-      recordsTotal : 0,
-      recordsFiltered: 0
-    };
+  request(parameters: Partial<DatasourceParameters>) {
+    this.lastRequestParams = { ...this.lastRequestParams, ...parameters };
+    this.requestSubject$.next(this.lastRequestParams);
   }
 
-  public toggleSort(colState : ColumnState, shiftPressed : boolean): void {
-    colState.sortOrder = getNextSortOrder(colState.sortOrder);
+  toggleSort(column : ColumnState, orderMulti : boolean): void {
+    column.sortOrder = getNextSortOrder(column.sortOrder);
 
-    if (shiftPressed && this.orderMulti) {
-      let curIndex : number = this.sortStack.indexOf(colState);
+    if (orderMulti) {
+      let curIndex : number = this.sortStack.indexOf(column);
       if (curIndex === -1) {
-        this.sortStack.push(colState);
-      } else if (!colState.sortOrder) {
+        this.sortStack.push(column);
+      } else if (!column.sortOrder) {
         this.sortStack.splice(curIndex, 1);
       }
     } else {
-      this.sortStack = colState.sortOrder ? [colState] : [];
-      this.columns.forEach((column) => {
-        if (column !== colState) {
-          column.sortOrder = null;
+      this.sortStack = column.sortOrder ? [column] : [];
+      this.columns.forEach((c) => {
+        if (c !== column) {
+          c.sortOrder = null;
         }
       });
     }
 
-    this.notify();
+    this.request({
+      orders:  this.sortStack.map(column => {
+        const order: DatasourceOrder = {
+          dir: column.sortOrder,
+          name: column.def.name
+        };
+        return order;
+      })
+    });
   }
-
-  public changePaging(page: number){
-      this.paging.currentPage = page;
-      this.notify();
-  }
-
+ 
   changeFilter(column: ColumnState, filterValue: any) {
     column.filterValue = filterValue;
-    this.paging.currentPage = 1;
-    this.notify();
-  }
 
-  public notify () : void {
-    this.stateChangedSource.next(this);
+    this.request({
+      filters: this.columns.filter(c => c.hasFilter).map(column => {
+        const filter: DatasourceFilter = {
+          name: column.def.name,
+          type: column.def.filter.type,
+          value: column.filterValue
+        };
+        return filter;
+      })
+    });
   }
 
   interpolateLocalization(str: string, params: any) {
