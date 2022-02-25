@@ -86,23 +86,6 @@
             "browserTarget": "ng2-ya-table-demo:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": []
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -138,14 +121,6 @@
             "production": {
               "tsConfig": "projects/ng2-ya-table/tsconfig.lib.prod.json"
             }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ng2-ya-table/src/test.ts",
-            "tsConfig": "projects/ng2-ya-table/tsconfig.spec.json",
-            "karmaConfig": "projects/ng2-ya-table/karma.conf.js"
           }
         }
       }
