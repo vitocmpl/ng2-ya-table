@@ -132,6 +132,16 @@
               "tsConfig": "projects/ng2-ya-table/tsconfig.lib.prod.json"
             }
           }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "./tsconfig.spec.json",
+            "globalMocks": [
+              "getComputedStyle",
+              "styleTransform"
+            ]
+          }
         }
       }
     }
