@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { DataSourceService } from './data-source.service';
 import { AppComponent } from './app.component';
+import { DatasourceResult, TableColumnFilterList } from 'ng2-ya-table';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -11,7 +12,8 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     const dataSourceServiceStub: Partial<DataSourceService> = {
-      getCities: jest.fn().mockReturnValue(of(null))
+      getCities: jest.fn().mockReturnValue(of([ 'Rome '])),
+      getUsersDataSource: jest.fn().mockReturnValue(of(null))
     };
 
     TestBed.overrideComponent(
@@ -36,12 +38,28 @@ describe('AppComponent', () => {
   });
 
   it('should create', () => {
+    const ds: Observable<DatasourceResult> = component.datasource({ 
+      start: 0,
+      length: 10,
+      filters: [],
+      orders: [],
+      fullTextFilter: ''
+    });
+    ds.subscribe(result => {
+      expect(result).toBeNull();
+    })
+
+    const cityColConfig = component.columns.find(c => c.name === 'address.city').filter.config as TableColumnFilterList;
+    cityColConfig.list.subscribe(result => {
+      expect(result).toEqual([{ value: 'Rome', text: 'Rome' }]);
+    })
+
     expect(component).toBeTruthy();
   });
 
-  it('should ng2-ya-table create', () => {
-    const compiled: HTMLElement = fixture.debugElement.nativeElement;
-    const table = compiled.querySelector('ng2-ya-table');
-    expect(table).toBeTruthy();
+  it('should display alert', () => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    component.onActionClick(1);
+    expect(window.alert).toHaveBeenCalled();
   });
 });

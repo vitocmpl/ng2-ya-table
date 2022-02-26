@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { DatasourceParameters, DatasourceResult } from "dist/ng2-ya-table/public-api";
+import { DatasourceParameters, DatasourceResult } from "ng2-ya-table";
 import { DataSourceService, UserDto } from "./data-source.service";
 
 describe('DataSourceService', () => {
