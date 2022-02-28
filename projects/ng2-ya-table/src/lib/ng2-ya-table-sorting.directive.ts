@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, Output, EventEmitter } from '@angular/core';
-import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
+import { ColumnState } from './ng2-ya-table.service';
 
 @Directive({selector: '[ng2YaTableSorting]'})
 export class Ng2YaTableSortingDirective {
