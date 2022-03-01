@@ -8,8 +8,6 @@ export interface ColumnState {
   filterValue : any;
   sortOrder : SORT_ORDER;
   def : TableColumn;
-  hasSort : boolean;
-  hasFilter : boolean;
 }
 
 const sortCycle : SORT_ORDER[] = ['asc', 'desc', null];
@@ -67,9 +65,7 @@ export class Ng2YaTableService {
       let column: ColumnState = {
         filterValue: null,
         sortOrder: c.defaultSortOrder,
-        def: c,
-        hasSort: c.sort,
-        hasFilter: !!c.filter
+        def: c
       };
 
       if(!!column.sortOrder){
@@ -119,7 +115,7 @@ export class Ng2YaTableService {
     column.filterValue = filterValue;
 
     this.request({
-      filters: this.columns.filter(c => c.hasFilter).map(column => {
+      filters: this.columns.filter(c => !!c.filterValue).map(column => {
         const filter: DatasourceFilter = {
           name: column.def.name,
           type: column.def.filter.type,

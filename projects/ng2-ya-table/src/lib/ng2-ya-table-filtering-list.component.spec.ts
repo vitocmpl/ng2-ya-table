@@ -32,8 +32,6 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
             },
         },
         filterValue: '',
-        hasFilter: true,
-        hasSort: false,
         sortOrder: 'asc'
     };
 
