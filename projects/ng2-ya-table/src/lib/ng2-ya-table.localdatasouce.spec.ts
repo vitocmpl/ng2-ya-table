@@ -1,6 +1,5 @@
 import { fakeAsync, flush } from "@angular/core/testing";
-import { TableDataSource } from "dist/ng2-ya-table/public-api";
-import { DatasourceParameters, DatasourceResult } from "ng2-ya-table";
+import { DatasourceParameters, DatasourceResult, TableDataSource } from "./ng2-ya-table-interfaces";
 import { getItemValues, Ng2YaTableLocalDataSource } from "./ng2-ya-table.localdatasouce";
 
 describe('Ng2YaTableLocalDataSource', () => {
@@ -32,19 +31,7 @@ describe('Ng2YaTableLocalDataSource', () => {
         request = {
             start: 0,
             length: 10,
-            filters: [{
-                name: 'id',
-                type: 'equals',
-                value: null
-            },{
-                name: 'name',
-                type: 'default',
-                value: null
-            }, {
-                name: 'address.city',
-                type: 'text',
-                value: null
-            }],
+            filters: [],
             orders: [],
             fullTextFilter: ''
         };

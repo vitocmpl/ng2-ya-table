@@ -40,7 +40,7 @@ export class Ng2YaTableLocalDataSource {
                 });
             });
             
-            request.orders.forEach((column) => {
+            [...request.orders].reverse().forEach((column) => {
                 const dir = (column.dir === 'asc') ? 1 : -1;
         
                 const compare = (direction: number, a: any, b: any) => {
