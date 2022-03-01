@@ -10,7 +10,6 @@ describe('DataSourceService', () => {
     let httpTestingController: HttpTestingController;
     let users: UserDto[];
     let request: DatasourceParameters;
-    let result: DatasourceResult<UserDto>;
     
     beforeEach(() => {
         TestBed.configureTestingModule({ 
@@ -46,12 +45,6 @@ describe('DataSourceService', () => {
             orders: [],
             fullTextFilter: ''
         };
-
-        result = {
-            data: users,
-            recordsFiltered: 2,
-            recordsTotal: 2
-        };
     });
 
     afterEach(() => {
@@ -59,65 +52,66 @@ describe('DataSourceService', () => {
     });
   
     it('#getCities should return values', () => {
-        service.getCities().subscribe(r => {
-            expect(r).toEqual([ "Konohagakure", "Sunagakure" ]);
-        });
+        let result: string[] = [];
+        service.getCities().subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(service["url"]);
         expect(req.request.method).toEqual('GET');
         req.flush(users);
+        expect(result).toEqual([ "Konohagakure", "Sunagakure" ]);
     });
 
     it('#getUsersDataSource should return values', () => {
-        
-        service.getUsersDataSource(request).subscribe(r => {
-            expect(r).toEqual(result);
-        });
+        let result: DatasourceResult;
+        service.getUsersDataSource(request).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=1&_limit=10&`);
         expect(req.request.method).toEqual('GET');
-        req.flush(result);
+        req.flush(users, { headers: { 'x-total-count': '2' }});
+        expect(result).toEqual({
+            data: users,
+            recordsFiltered: 2,
+            recordsTotal: 2
+        });
     });
 
     it('#getUsersDataSource with full text filter should return values', () => {
-        
+        let result: DatasourceResult;
         const filtered: DatasourceResult<UserDto> = {
             data: [users[0]],
             recordsFiltered: 1,
-            recordsTotal: 2
+            recordsTotal: 1
         };
 
-        service.getUsersDataSource({ ...request, fullTextFilter: 'Naruto'}).subscribe(r => {
-            expect(r).toEqual(filtered);
-        });
+        service.getUsersDataSource({ ...request, fullTextFilter: 'Naruto'}).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=1&_limit=10&q=Naruto&`);
         expect(req.request.method).toEqual('GET');
-        req.flush(filtered);
+        req.flush(filtered.data, { headers: { 'x-total-count': '' + filtered.recordsTotal }});
+        expect(result).toEqual(filtered);
     });
 
     it('#getUsersDataSource with filters should return values', () => {
-        
+        let result: DatasourceResult;
         const filtered: DatasourceResult<UserDto> = {
             data: [users[0]],
             recordsFiltered: 1,
-            recordsTotal: 2
+            recordsTotal: 1
         };
 
         service.getUsersDataSource({ ...request, filters : [
             { name: 'username', value: 'uzumaki', type: 'default' },
             { name: 'city', value: 'gakure', type: 'default' }
-        ]}).subscribe(r => {
-            expect(r).toEqual(filtered);
-        });
+        ]}).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=1&_limit=10&username_like=uzumaki&city_like=gakure&`);
         expect(req.request.method).toEqual('GET');
-        req.flush(filtered);
+        req.flush(filtered.data, { headers: { 'x-total-count': '' + filtered.recordsTotal }});
+        expect(result).toEqual(filtered);
     });
 
     it('#getUsersDataSource with orders should return values', () => {
-        
+        let result: DatasourceResult;
         const filtered: DatasourceResult<UserDto> = {
             data: [ users[1], users[0]],
             recordsFiltered: 2,
@@ -127,29 +121,27 @@ describe('DataSourceService', () => {
         service.getUsersDataSource({ ...request, orders : [
             { name: 'username', dir: 'asc' },
             { name: 'city', dir: 'desc' }
-        ]}).subscribe(r => {
-            expect(r).toEqual(filtered);
-        });
+        ]}).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=1&_limit=10&_sort=username,city&_order=ASC,DESC&`);
         expect(req.request.method).toEqual('GET');
-        req.flush(filtered);
+        req.flush(filtered.data, { headers: { 'x-total-count': '' + filtered.recordsTotal }});
+        expect(result).toEqual(filtered);
     });
 
     it('#getUsersDataSource should not return values', () => {
-        
+        let result: DatasourceResult;
         const filtered: DatasourceResult<UserDto> = {
             data: [],
             recordsFiltered: 0,
-            recordsTotal: 2
+            recordsTotal: 0
         };
 
-        service.getUsersDataSource({ ...request, start: 10 }).subscribe(r => {
-            expect(r).toEqual(filtered);
-        });
+        service.getUsersDataSource({ ...request, start: 10 }).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=2&_limit=10&`);
         expect(req.request.method).toEqual('GET');
-        req.flush(filtered);
+        req.flush(filtered.data, { headers: { 'x-total-count': '' + filtered.recordsTotal }});
+        expect(result).toEqual(filtered);
     });
   });

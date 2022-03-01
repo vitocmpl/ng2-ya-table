@@ -1,10 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { DataSourceService } from './data-source.service';
 import { AppComponent } from './app.component';
-import { DatasourceResult, TableColumnFilterList } from 'ng2-ya-table';
+import { DatasourceResult, TableColumnFilterList, TableColumnFilterListItem } from 'ng2-ya-table';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -12,7 +12,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     const dataSourceServiceStub: Partial<DataSourceService> = {
-      getCities: jest.fn().mockReturnValue(of([ 'Rome '])),
+      getCities: jest.fn().mockReturnValue(of([ 'Rome' ])),
       getUsersDataSource: jest.fn().mockReturnValue(of(null))
     };
 
@@ -37,7 +37,7 @@ describe('AppComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('should create', fakeAsync(() => {
     const ds: Observable<DatasourceResult> = component.datasource({ 
       start: 0,
       length: 10,
@@ -45,17 +45,19 @@ describe('AppComponent', () => {
       orders: [],
       fullTextFilter: ''
     });
-    ds.subscribe(result => {
-      expect(result).toBeNull();
-    })
+    let result: DatasourceResult = null;
+    ds.subscribe(r => result = r);
+    flush();
+    expect(result).toBeNull();
 
     const cityColConfig = component.columns.find(c => c.name === 'address.city').filter.config as TableColumnFilterList;
-    cityColConfig.list.subscribe(result => {
-      expect(result).toEqual([{ value: 'Rome', text: 'Rome' }]);
-    })
+    let cityResult: TableColumnFilterListItem[] = [];
+    cityColConfig.list.subscribe(r => cityResult = r);
+    flush();
+    expect(cityResult).toEqual([{ value: 'Rome', text: 'Rome' }]);
 
     expect(component).toBeTruthy();
-  });
+  }));
 
   it('should display alert', () => {
     jest.spyOn(window, 'alert').mockImplementation(() => {});
