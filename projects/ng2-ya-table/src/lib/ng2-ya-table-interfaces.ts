@@ -1,9 +1,8 @@
 import { Observable } from "rxjs";
 
 export type SORT_ORDER = 'asc' | 'desc';
-export type FILTER_TYPE = 'default' | 'text' | 'range' | 'daterange' | 'equals' | 'collection';
 export type FILTER_CONTROL_TYPE = 'default' | 'list';
-export type FILTER_DEFAULT_CONTROL_TYPE = 'text' | 'number' | 'date' | 'time';
+export type FILTER_DEFAULT_CONTROL_TYPE = 'text' | 'number' | 'date' | 'time' | string;
 
 export interface TableOptions {
     language?: string | LanguagesMap;
@@ -34,7 +33,6 @@ export interface TableColumn {
 }
 
 export interface TableColumnFilter {
-    type: FILTER_TYPE;
     controlType: FILTER_CONTROL_TYPE;
     config?: TableColumnFilterDefault | TableColumnFilterList;
 }
@@ -67,7 +65,6 @@ export interface DatasourceParameters {
 
 export interface DatasourceFilter { 
     name: string; 
-    type: FILTER_TYPE;
     value: any;
 }
 

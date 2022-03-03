@@ -31,7 +31,6 @@ describe('Ng2YaTableService', () => {
             width: '10rem',
             defaultSortOrder: 'asc',
             filter: {
-                type: 'default',
                 controlType: 'default'
             }
         }, { 

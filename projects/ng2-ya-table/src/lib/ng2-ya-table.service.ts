@@ -118,7 +118,6 @@ export class Ng2YaTableService {
       filters: this.columns.filter(c => !!c.filterValue).map(column => {
         const filter: DatasourceFilter = {
           name: column.def.name,
-          type: column.def.filter.type,
           value: column.filterValue
         };
         return filter;

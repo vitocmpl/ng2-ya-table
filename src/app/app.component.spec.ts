@@ -52,7 +52,7 @@ describe('AppComponent', () => {
 
     const cityColConfig = component.columns.find(c => c.name === 'address.city').filter.config as TableColumnFilterList;
     let cityResult: TableColumnFilterListItem[] = [];
-    cityColConfig.list.subscribe(r => cityResult = r);
+    (cityColConfig.list as Observable<TableColumnFilterListItem[]>).subscribe(r => cityResult = r);
     flush();
     expect(cityResult).toEqual([{ value: 'Rome', text: 'Rome' }]);
 

@@ -22,7 +22,6 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
         def: { 
             name: 'name',
             filter: {
-                type: 'default',
                 controlType: 'default',
                 config: {
                     placeholder: 'Filter by name'

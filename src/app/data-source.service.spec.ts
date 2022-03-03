@@ -100,8 +100,8 @@ describe('DataSourceService', () => {
         };
 
         service.getUsersDataSource({ ...request, filters : [
-            { name: 'username', value: 'uzumaki', type: 'default' },
-            { name: 'city', value: 'gakure', type: 'default' }
+            { name: 'username', value: 'uzumaki' },
+            { name: 'city', value: 'gakure' }
         ]}).subscribe(r => result = r);
         
         const req = httpTestingController.expectOne(`${service["url"]}?_page=1&_limit=10&username_like=uzumaki&city_like=gakure&`);

@@ -42,7 +42,6 @@ export class AppComponent {
             sort: true,
             defaultSortOrder: 'asc',
             filter: {
-                type: 'default',
                 controlType: 'default',
                 config: {
                     placeholder: 'Filter by name'
@@ -54,7 +53,6 @@ export class AppComponent {
             name: 'username',
             sort: true,
             filter: {
-                type: 'default',
                 controlType: 'default',
                 config: {
                     placeholder: 'Filter by username'
@@ -66,7 +64,6 @@ export class AppComponent {
             name: 'email',
             sort: true,
             filter: {
-                type: 'default',
                 controlType: 'default',
                 config: {
                     placeholder: 'Filter by email'
@@ -78,7 +75,6 @@ export class AppComponent {
             name: "address.city",
             sort: true,
             filter: {
-                type: 'default',
                 controlType: "list",
                 config: {
                     list: this.service.getCities().pipe(map(result => {

@@ -23,7 +23,6 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
         def: { 
             name: 'city',
             filter: {
-                type: 'default',
                 controlType: 'default',
                 config: {
                     nullText: 'Select a city',

@@ -104,9 +104,9 @@ describe('Ng2YaTableLocalDataSource', () => {
 
         let result: DatasourceResult = null;
         datasource({ ...request, filters : [
-            { name: 'id', value: null, type: 'equals' },
-            { name: 'name', value: 'uzumaki', type: 'default' },
-            { name: 'address.city', value: 'gakure', type: 'text' }
+            { name: 'id', value: null },
+            { name: 'name', value: 'uzumaki' },
+            { name: 'address.city', value: 'gakure' }
         ]}).subscribe(r => result = r);
         flush();
         expect(result).toEqual(filtered);
