@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { PageChangedEvent, PaginationComponent } from 'ngx-bootstrap/pagination';
 
 import { TableDataSource, TableOptions, TableColumn, TablePaging, LanguageMap } from './ng2-ya-table-interfaces';
-import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
+import { Ng2YaTableService } from './ng2-ya-table.service';
 import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 import { Languages } from './ng2-ya-table-languages';
 
@@ -20,6 +20,12 @@ import { Languages } from './ng2-ya-table-languages';
 })
 export class Ng2YaTableComponent implements OnDestroy, OnInit {
   private subscription = new Subscription();
+  private _paging: TablePaging = {
+    itemsPerPage: 10,
+    itemsPerPageOptions: [10, 25, 50],
+    maxSize: 5,
+    showPaging: true
+  };
 
   itemsPerPage= new FormControl(0);
   fullTextFilter = new FormControl('');
@@ -33,12 +39,14 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   recordsTotal = 0;
 
   @Input() options: TableOptions = {};
-  @Input() paging: TablePaging = {
-    itemsPerPage: 10,
-    itemsPerPageOptions: [10, 25, 50],
-    maxSize: 5,
-    showPaging: true
-  };
+  
+  @Input() set paging(value: TablePaging) {
+    this._paging = value;
+    this.service.setPaging(value.itemsPerPage);
+  }
+  get paging(): TablePaging {
+    return this._paging;
+  }
 
   @Input() set datasource(value: TableDataSource | any[]) {
     this.service.setDataSource(value);
@@ -48,7 +56,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     this.showFilterRow = value.some(c => !!c.filter);
     this.service.setColumns(value);
   }
-  get cols(): ColumnState[] {
+  get cols(): TableColumn[] {
     return this.service.columns;
   }
 
@@ -112,11 +120,11 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     });
   }
 
-  onToggleSort(col: ColumnState, shiftKey: true) {
+  onToggleSort(col: TableColumn, shiftKey: true) {
     this.service.toggleSort(col, shiftKey && this.options.orderMulti);
   }
 
-  onChangeFilter(col: ColumnState, filterValue: any) {
+  onChangeFilter(col: TableColumn, filterValue: any) {
     this.service.changeFilter(col, filterValue);
   }
 
@@ -143,5 +151,9 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
       end: (this.currentPage - 1) * this.itemsPerPage.value + this.rows.length,
       total: this.recordsFiltered
     });
+  }
+
+  refresh() {
+    this.service.request({});
   }
 }

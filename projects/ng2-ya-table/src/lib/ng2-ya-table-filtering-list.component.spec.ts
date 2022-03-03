@@ -3,12 +3,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
 import { Ng2YaTableFilteringListComponent } from './ng2-ya-table-filtering-list.component';
-import { ColumnState } from './ng2-ya-table.service';
+import { TableColumn } from './ng2-ya-table-interfaces';
 
 describe('Ng2YaTableFilteringDefaultComponent', () => {
   let component: Ng2YaTableFilteringListComponent;
   let fixture: ComponentFixture<Ng2YaTableFilteringListComponent>;
-  let column: ColumnState;
+  let column: TableColumn;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,18 +20,16 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     component = fixture.componentInstance;
 
     column = {
-        def: { 
-            name: 'city',
-            filter: {
-                controlType: 'default',
-                config: {
-                    nullText: 'Select a city',
-                    list: of([{ value: 'Rome', text: 'Rome' }])
-                }
-            },
-        },
-        filterValue: '',
-        sortOrder: 'asc'
+      name: 'city',
+      filter: {
+          controlType: 'default',
+          config: {
+              nullText: 'Select a city',
+              list: of([{ value: 'Rome', text: 'Rome' }])
+          }
+      },
+      filterValue: '',
+      sortOrder: 'asc'
     };
 
     component.column = column;
@@ -57,17 +55,15 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
 
     component.column = {
       ...column,
-      def: {
-        ...column.def,
-        filter: {
-          ...column.def.filter,
-          config: {
-            ...column.def.filter.config,
-            list: [{ value: 'Rome', text: 'Rome' }]
-          }
+      filter: {
+        ...column.filter,
+        config: {
+          ...column.filter.config,
+          list: [{ value: 'Rome', text: 'Rome' }]
         }
       }
-    }
+    };
+
     fixture.detectChanges();
     const selectElement: HTMLSelectElement = fixture.nativeElement.querySelector('.form-control');
 

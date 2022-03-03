@@ -3,8 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { TableColumnFilterDefault } from './ng2-ya-table-interfaces';
-import { ColumnState } from './ng2-ya-table.service';
+import { TableColumn, TableColumnFilterDefault } from './ng2-ya-table-interfaces';
 
 @Component({
   selector: 'ng2-ya-table-filter-default',
@@ -15,14 +14,14 @@ export class Ng2YaTableFilteringDefaultComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
-  @Input() column: ColumnState;
+  @Input() column: TableColumn;
   @Output() filterValueChanged = new EventEmitter();
 
   filter = new FormControl('');
   config: TableColumnFilterDefault;
 
   ngOnInit(): void {
-    this.config = this.column.def.filter.config as TableColumnFilterDefault;
+    this.config = this.column.filter.config as TableColumnFilterDefault;
 
     this.subscription.add(this.filter.valueChanges.pipe(
       debounceTime(300),

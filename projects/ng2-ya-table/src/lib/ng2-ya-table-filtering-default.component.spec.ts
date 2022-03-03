@@ -2,12 +2,12 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Ng2YaTableFilteringDefaultComponent } from './ng2-ya-table-filtering-default.component';
-import { ColumnState } from './ng2-ya-table.service';
+import { TableColumn } from './ng2-ya-table-interfaces';
 
 describe('Ng2YaTableFilteringDefaultComponent', () => {
   let component: Ng2YaTableFilteringDefaultComponent;
   let fixture: ComponentFixture<Ng2YaTableFilteringDefaultComponent>;
-  let column: ColumnState;
+  let column: TableColumn;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,17 +19,15 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     component = fixture.componentInstance;
 
     column = {
-        def: { 
-            name: 'name',
-            filter: {
-                controlType: 'default',
-                config: {
-                    placeholder: 'Filter by name'
-                }
-            },
-        },
-        filterValue: '',
-        sortOrder: 'asc'
+      name: 'name',
+      filter: {
+          controlType: 'default',
+          config: {
+              placeholder: 'Filter by name'
+          }
+      },
+      filterValue: '',
+      sortOrder: 'asc'
     };
 
     component.column = column;
@@ -50,20 +48,17 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
   it('should create with number input', () => {
     component.column = {
       ...column,
-      def: {
-        ...column.def,
-        filter: {
-          ...column.def.filter,
-          config: {
-            ...column.def.filter.config,
-            type: 'number',
-            min: 10,
-            max: 100,
-            step: 10
-          }
+      filter: {
+        ...column.filter,
+        config: {
+          ...column.filter.config,
+          type: 'number',
+          min: 10,
+          max: 100,
+          step: 10
         }
       }
-    }
+    };
 
     fixture.detectChanges();
     const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('.form-control');

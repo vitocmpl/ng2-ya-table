@@ -29,6 +29,7 @@ export interface TableColumn {
     sort?: boolean;
     sortOrder?: SORT_ORDER;
     filter?: TableColumnFilter;
+    filterValue?: unknown;
     template?: string;
 }
 
