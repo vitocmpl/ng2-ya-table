@@ -1,4 +1,9 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
@@ -14,7 +19,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [Ng2YaTableFilteringListComponent],
       imports: [ReactiveFormsModule]
-    }).compileComponents();;
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Ng2YaTableFilteringListComponent);
     component = fixture.componentInstance;
@@ -22,11 +27,11 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     column = {
       name: 'city',
       filter: {
-          controlType: 'default',
-          config: {
-              nullText: 'Select a city',
-              list: of([{ value: 'Rome', text: 'Rome' }])
-          }
+        controlType: 'default',
+        config: {
+          nullText: 'Select a city',
+          list: of([{ value: 'Rome', text: 'Rome' }])
+        }
       },
       filterValue: '',
       sortOrder: 'asc'
@@ -40,7 +45,8 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     expect(component).toBeTruthy();
 
     fixture.detectChanges();
-    const selectElement: HTMLSelectElement = fixture.nativeElement.querySelector('.form-control');
+    const selectElement: HTMLSelectElement =
+      fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
     expect(selectElement.options.length).toEqual(2);
@@ -65,7 +71,8 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     };
 
     fixture.detectChanges();
-    const selectElement: HTMLSelectElement = fixture.nativeElement.querySelector('.form-control');
+    const selectElement: HTMLSelectElement =
+      fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
     expect(selectElement.options.length).toEqual(2);
@@ -74,7 +81,6 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     expect(selectElement.options[1].value).toEqual('Rome');
     expect(selectElement.options[1].text).toEqual('Rome');
   });
-
 
   it('should filterValueChanged emit value', fakeAsync(() => {
     const spy = jest.spyOn(component.filterValueChanged, 'emit');

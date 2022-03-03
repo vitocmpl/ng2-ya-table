@@ -10,21 +10,14 @@ import { Ng2YaTableComponent } from './ng2-ya-table.component';
 import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 
 @NgModule({
-  declarations: [ 
+  declarations: [
     Ng2YaTableComponent,
     Ng2YaTableFilteringDefaultComponent,
     Ng2YaTableFilteringListComponent,
     Ng2YaTableSortingDirective,
     Ng2YaTableCellTemplateDirective
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    PaginationModule
-  ],
-  exports: [
-    Ng2YaTableComponent,
-    Ng2YaTableCellTemplateDirective
-  ]
+  imports: [CommonModule, ReactiveFormsModule, PaginationModule],
+  exports: [Ng2YaTableComponent, Ng2YaTableCellTemplateDirective]
 })
-export class Ng2YaTableModule { }
+export class Ng2YaTableModule {}

@@ -1,15 +1,18 @@
-import { Component, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { Ng2YaTableCellTemplateDirective } from "./ng2-ya-table-cell-template.directive";
+import { Component, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 
 @Component({
   template: `
-    <ng-template ng2YaTableCellTemplate="template"><p>Template!</p></ng-template>
+    <ng-template ng2YaTableCellTemplate="template"
+      ><p>Template!</p></ng-template
+    >
     <ng-container [ngTemplateOutlet]="getTemplate()"></ng-container>
   `
 })
 class TestComponent {
-  @ViewChild(Ng2YaTableCellTemplateDirective, { static: true }) directive: Ng2YaTableCellTemplateDirective;
+  @ViewChild(Ng2YaTableCellTemplateDirective, { static: true })
+  directive: Ng2YaTableCellTemplateDirective;
 
   getTemplate() {
     return this.directive.templateRef;
@@ -17,16 +20,12 @@ class TestComponent {
 }
 
 describe('Ng2YaTableCellTemplateDirective', () => {
-
   let component: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        TestComponent,
-        Ng2YaTableCellTemplateDirective
-      ]
+      declarations: [TestComponent, Ng2YaTableCellTemplateDirective]
     });
 
     fixture = TestBed.createComponent(TestComponent);
@@ -44,4 +43,3 @@ describe('Ng2YaTableCellTemplateDirective', () => {
     expect(p.innerHTML).toEqual('Template!');
   });
 });
-  

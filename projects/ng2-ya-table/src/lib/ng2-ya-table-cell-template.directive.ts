@@ -4,8 +4,7 @@ import { Directive, Input, TemplateRef } from '@angular/core';
   selector: '[ng2YaTableCellTemplate]'
 })
 export class Ng2YaTableCellTemplateDirective {
-
   @Input() public ng2YaTableCellTemplate: string;
 
-  constructor(public templateRef: TemplateRef<HTMLElement>) { }
+  constructor(public templateRef: TemplateRef<HTMLElement>) {}
 }

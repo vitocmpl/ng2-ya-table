@@ -1,11 +1,32 @@
-import { Component, Input, OnInit, OnDestroy, ContentChildren, QueryList, TemplateRef, ChangeDetectionStrategy, ChangeDetectorRef, ViewEncapsulation, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { PageChangedEvent, PaginationComponent } from 'ngx-bootstrap/pagination';
+import {
+  PageChangedEvent,
+  PaginationComponent
+} from 'ngx-bootstrap/pagination';
 
-import { TableDataSource, TableOptions, TableColumn, TablePaging, LanguageMap } from './ng2-ya-table-interfaces';
+import {
+  LanguageMap,
+  TableColumn,
+  TableDataSource,
+  TableOptions,
+  TablePaging
+} from './ng2-ya-table-interfaces';
 import { Ng2YaTableService } from './ng2-ya-table.service';
 import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 import { Languages } from './ng2-ya-table-languages';
@@ -14,7 +35,7 @@ import { Languages } from './ng2-ya-table-languages';
   selector: 'ng2-ya-table',
   templateUrl: './ng2-ya-table.component.html',
   styleUrls: ['./ng2-ya-table.component.scss'],
-  providers: [ Ng2YaTableService ],
+  providers: [Ng2YaTableService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
@@ -27,9 +48,9 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     showPaging: true
   };
 
-  itemsPerPage= new FormControl(0);
+  itemsPerPage = new FormControl(0);
   fullTextFilter = new FormControl('');
-  
+
   language: LanguageMap = null;
   showFilterRow = false;
   processing = false;
@@ -39,7 +60,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   recordsTotal = 0;
 
   @Input() options: TableOptions = {};
-  
+
   @Input() set paging(value: TablePaging) {
     this._paging = value;
     this.service.setPaging(value.itemsPerPage);
@@ -51,9 +72,9 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   @Input() set datasource(value: TableDataSource | any[]) {
     this.service.setDataSource(value);
   }
-  
+
   @Input() set columns(value: TableColumn[]) {
-    this.showFilterRow = value.some(c => !!c.filter);
+    this.showFilterRow = value.some((c) => !!c.filter);
     this.service.setColumns(value);
   }
   get cols(): TableColumn[] {
@@ -61,60 +82,74 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   }
 
   @ViewChild(PaginationComponent) pagination: PaginationComponent;
-  @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
+  @ContentChildren(Ng2YaTableCellTemplateDirective)
+  cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
-  public constructor(private service: Ng2YaTableService, private cdRef: ChangeDetectorRef) { }
+  public constructor(
+    private service: Ng2YaTableService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.language = typeof this.options?.language ==="string" ? Languages[this.options?.language] : this.options?.language;
-    if(!this.language) {
-      this.language = Languages["en"];
+    this.language =
+      typeof this.options?.language === 'string'
+        ? Languages[this.options?.language]
+        : this.options?.language;
+    if (!this.language) {
+      this.language = Languages['en'];
     }
 
-    this.subscription.add(this.fullTextFilter.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(filterValue => { 
-      this.service.request({ 
-        fullTextFilter: filterValue,
-        start: 0
-      });
-    }));
+    this.subscription.add(
+      this.fullTextFilter.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe((filterValue) => {
+          this.service.request({
+            fullTextFilter: filterValue,
+            start: 0
+          });
+        })
+    );
 
     this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
-    this.subscription.add(this.itemsPerPage.valueChanges.subscribe(itemsPerPage => {
-      const page = this.pagination.page;
-      this.pagination.itemsPerPage = itemsPerPage;
-      if(page === this.pagination.page) {
-        this.service.request({ 
-          start: (page - 1) * itemsPerPage,
-          length: itemsPerPage
-        });
-      }
-    }));
+    this.subscription.add(
+      this.itemsPerPage.valueChanges.subscribe((itemsPerPage) => {
+        const page = this.pagination.page;
+        this.pagination.itemsPerPage = itemsPerPage;
+        if (page === this.pagination.page) {
+          this.service.request({
+            start: (page - 1) * itemsPerPage,
+            length: itemsPerPage
+          });
+        }
+      })
+    );
 
-    this.subscription.add(this.service.result$.subscribe(result => {
-      this.cdRef.markForCheck(); 
-      this.rows = result.data;
-      this.recordsFiltered = result.recordsFiltered;
-      this.recordsTotal = result.recordsTotal;
-    }));
+    this.subscription.add(
+      this.service.result$.subscribe((result) => {
+        this.cdRef.markForCheck();
+        this.rows = result.data;
+        this.recordsFiltered = result.recordsFiltered;
+        this.recordsTotal = result.recordsTotal;
+      })
+    );
 
-    this.subscription.add(this.service.processing$.subscribe(result => {
-      this.cdRef.markForCheck(); 
-      this.processing = result;
-    }));
+    this.subscription.add(
+      this.service.processing$.subscribe((result) => {
+        this.cdRef.markForCheck();
+        this.processing = result;
+      })
+    );
 
     this.service.request({});
   }
 
-  ngOnDestroy () : void {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
   onPageChanged(event: PageChangedEvent) {
     this.currentPage = event.page;
-    this.service.request({ 
+    this.service.request({
       start: (event.page - 1) * event.itemsPerPage,
       length: event.itemsPerPage
     });
@@ -129,17 +164,25 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   }
 
   getData(row: any, propertyName: string): string {
-    if(!!propertyName) {
-      return propertyName.split('.').reduce((prev:any, curr:string) => prev[curr], row);
+    if (propertyName) {
+      return propertyName
+        .split('.')
+        .reduce((prev: any, curr: string) => prev[curr], row);
     }
     return null;
   }
 
-  getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<HTMLElement>): TemplateRef<HTMLElement> {
-    if(!!col.template || !!col.name) {
-      const templates = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === (!!col.template ? col.template : col.name));
+  getCellTemplate(
+    col: TableColumn,
+    standardTemplate: TemplateRef<HTMLElement>
+  ): TemplateRef<HTMLElement> {
+    if (!!col.template || !!col.name) {
+      const templates = this.cellTemplates.filter(
+        (p) =>
+          p.ng2YaTableCellTemplate === (col.template ? col.template : col.name)
+      );
       if (templates.length > 0) {
-        return templates.map(p => p.templateRef)[0];
+        return templates.map((p) => p.templateRef)[0];
       }
     }
     return standardTemplate;

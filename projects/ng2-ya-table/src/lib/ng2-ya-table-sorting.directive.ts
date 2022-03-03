@@ -1,8 +1,13 @@
-import { Directive, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import {
+  Directive,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output
+} from '@angular/core';
 
-@Directive({selector: '[ng2YaTableSorting]'})
+@Directive({ selector: '[ng2YaTableSorting]' })
 export class Ng2YaTableSortingDirective {
-
   @Input('ng2YaTableSorting') enabled = false;
   @Output() toggled = new EventEmitter<boolean>();
 

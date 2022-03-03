@@ -1,39 +1,46 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { TableColumn, SORT_ORDER, TableDataSource, DatasourceOrder, DatasourceFilter, DatasourceParameters } from './ng2-ya-table-interfaces';
+import {
+  DatasourceFilter,
+  DatasourceOrder,
+  DatasourceParameters,
+  SORT_ORDER,
+  TableColumn,
+  TableDataSource
+} from './ng2-ya-table-interfaces';
 import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 
-const sortCycle : SORT_ORDER[] = ['asc', 'desc', null];
-const getNextSortOrder = (currentSortOrder : SORT_ORDER) : SORT_ORDER =>  {
-  const nextIndex = (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
+const sortCycle: SORT_ORDER[] = ['asc', 'desc', null];
+const getNextSortOrder = (currentSortOrder: SORT_ORDER): SORT_ORDER => {
+  const nextIndex =
+    (sortCycle.indexOf(currentSortOrder) + 1) % sortCycle.length;
   return sortCycle[nextIndex];
 };
 
-const defaultRequestParams : DatasourceParameters = {
+const defaultRequestParams: DatasourceParameters = {
   start: 0,
   length: 10,
   filters: [],
   orders: [],
-  fullTextFilter: ""
+  fullTextFilter: ''
 };
 
 @Injectable()
 export class Ng2YaTableService {
-
   private localizationInterpolationMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
   private lastRequestParams = defaultRequestParams;
-  
+
   private dataSource: TableDataSource;
   private requestSubject$ = new Subject<DatasourceParameters>();
   private processingSubject$ = new Subject<boolean>();
-  
+
   columns: TableColumn[] = [];
   sortStack: TableColumn[] = [];
 
   result$ = this.requestSubject$.pipe(
     tap(() => this.processingSubject$.next(true)),
-    switchMap(request => {
+    switchMap((request) => {
       return this.dataSource(request);
     }),
     tap(() => this.processingSubject$.next(false))
@@ -43,20 +50,29 @@ export class Ng2YaTableService {
 
   setDataSource(datasource: TableDataSource | any[]) {
     if (datasource instanceof Array) {
-      this.dataSource = new Ng2YaTableLocalDataSource(datasource).toDataSource();
+      this.dataSource = new Ng2YaTableLocalDataSource(
+        datasource
+      ).toDataSource();
     } else {
       this.dataSource = datasource;
     }
   }
 
   setPaging(itemsPerPage: number) {
-    this.lastRequestParams = { ...this.lastRequestParams, length: itemsPerPage };
+    this.lastRequestParams = {
+      ...this.lastRequestParams,
+      length: itemsPerPage
+    };
   }
 
-  setColumns(columns : TableColumn[]): void {
+  setColumns(columns: TableColumn[]): void {
     this.columns = columns;
-    this.sortStack = [ ...this.columns.filter(c => !!c.sortOrder) ];
-    this.lastRequestParams = { ...this.lastRequestParams, orders: this.buildDatasourceOrders(), filters: this.buildDatasourceFilter() };
+    this.sortStack = [...this.columns.filter((c) => !!c.sortOrder)];
+    this.lastRequestParams = {
+      ...this.lastRequestParams,
+      orders: this.buildDatasourceOrders(),
+      filters: this.buildDatasourceFilter()
+    };
   }
 
   request(parameters: Partial<DatasourceParameters>) {
@@ -64,11 +80,11 @@ export class Ng2YaTableService {
     this.requestSubject$.next(this.lastRequestParams);
   }
 
-  toggleSort(column : TableColumn, orderMulti : boolean): void {
+  toggleSort(column: TableColumn, orderMulti: boolean): void {
     column.sortOrder = getNextSortOrder(column.sortOrder);
 
     if (orderMulti) {
-      let curIndex : number = this.sortStack.indexOf(column);
+      let curIndex: number = this.sortStack.indexOf(column);
       if (curIndex === -1) {
         this.sortStack.push(column);
       } else if (!column.sortOrder) {
@@ -89,7 +105,7 @@ export class Ng2YaTableService {
   }
 
   private buildDatasourceOrders(): DatasourceOrder[] {
-    return this.sortStack.map(column => {
+    return this.sortStack.map((column) => {
       const order: DatasourceOrder = {
         dir: column.sortOrder,
         name: column.name
@@ -97,7 +113,7 @@ export class Ng2YaTableService {
       return order;
     });
   }
- 
+
   changeFilter(column: TableColumn, filterValue: any) {
     column.filterValue = filterValue;
 
@@ -107,19 +123,24 @@ export class Ng2YaTableService {
   }
 
   private buildDatasourceFilter(): DatasourceFilter[] {
-    return this.columns.filter(c => !!c.filterValue).map(column => {
-      const filter: DatasourceFilter = {
-        name: column.name,
-        value: column.filterValue
-      };
-      return filter;
-    });
+    return this.columns
+      .filter((c) => !!c.filterValue)
+      .map((column) => {
+        const filter: DatasourceFilter = {
+          name: column.name,
+          value: column.filterValue
+        };
+        return filter;
+      });
   }
 
   interpolateLocalization(str: string, params: any) {
-    return str.replace(this.localizationInterpolationMatcher, (substring: string, b: string) => {
-      let r = params[b];
-      return !!r ? r : substring;
-    });
+    return str.replace(
+      this.localizationInterpolationMatcher,
+      (substring: string, b: string) => {
+        let r = params[b];
+        return r ? r : substring;
+      }
+    );
   }
 }

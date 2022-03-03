@@ -1,4 +1,9 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Ng2YaTableFilteringDefaultComponent } from './ng2-ya-table-filtering-default.component';
@@ -13,7 +18,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [Ng2YaTableFilteringDefaultComponent],
       imports: [ReactiveFormsModule]
-    }).compileComponents();;
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Ng2YaTableFilteringDefaultComponent);
     component = fixture.componentInstance;
@@ -21,10 +26,10 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     column = {
       name: 'name',
       filter: {
-          controlType: 'default',
-          config: {
-              placeholder: 'Filter by name'
-          }
+        controlType: 'default',
+        config: {
+          placeholder: 'Filter by name'
+        }
       },
       filterValue: '',
       sortOrder: 'asc'
@@ -38,7 +43,8 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     expect(component).toBeTruthy();
 
     fixture.detectChanges();
-    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('.form-control');
+    const inputElement: HTMLInputElement =
+      fixture.nativeElement.querySelector('.form-control');
 
     expect(inputElement).toBeTruthy();
     expect(inputElement.placeholder).toEqual('Filter by name');
@@ -61,7 +67,8 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     };
 
     fixture.detectChanges();
-    const inputElement: HTMLInputElement = fixture.nativeElement.querySelector('.form-control');
+    const inputElement: HTMLInputElement =
+      fixture.nativeElement.querySelector('.form-control');
 
     expect(inputElement).toBeTruthy();
     expect(inputElement.type).toEqual('number');
@@ -85,7 +92,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     tick(100);
     component.filter.setValue('hello');
     tick(300);
-    
+
     expect(spy).toHaveBeenCalledTimes(1);
   }));
 
@@ -96,7 +103,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     tick(300);
     component.filter.setValue('world');
     tick(300);
-    
+
     expect(spy).toHaveBeenCalledTimes(2);
   }));
 });
