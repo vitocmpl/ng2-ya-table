@@ -49,7 +49,7 @@ export interface TableColumnFilterDefault {
 
 export interface TableColumnFilterList {
     nullText?:string;
-    list: Observable<TableColumnFilterListItem[]>;
+    list: Observable<TableColumnFilterListItem[]> | TableColumnFilterListItem[];
 }
 
 export interface TableColumnFilterListItem {

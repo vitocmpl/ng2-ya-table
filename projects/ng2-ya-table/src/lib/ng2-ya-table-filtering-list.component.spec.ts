@@ -53,6 +53,33 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
     expect(selectElement.options[1].text).toEqual('Rome');
   });
 
+  it('should create with array', () => {
+    expect(component).toBeTruthy();
+
+    component.column = {
+      ...column,
+      def: {
+        ...column.def,
+        filter: {
+          ...column.def.filter,
+          config: {
+            ...column.def.filter.config,
+            list: [{ value: 'Rome', text: 'Rome' }]
+          }
+        }
+      }
+    }
+    fixture.detectChanges();
+    const selectElement: HTMLSelectElement = fixture.nativeElement.querySelector('.form-control');
+
+    expect(selectElement).toBeTruthy();
+    expect(selectElement.options.length).toEqual(2);
+    expect(selectElement.options[0].value).toEqual('');
+    expect(selectElement.options[0].text).toEqual('Select a city');
+    expect(selectElement.options[1].value).toEqual('Rome');
+    expect(selectElement.options[1].text).toEqual('Rome');
+  });
+
 
   it('should filterValueChanged emit value', fakeAsync(() => {
     const spy = jest.spyOn(component.filterValueChanged, 'emit');

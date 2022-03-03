@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnI
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { TableColumnFilterList } from './ng2-ya-table-interfaces';
+import { TableColumnFilterList, TableColumnFilterListItem } from './ng2-ya-table-interfaces';
 import { ColumnState } from './ng2-ya-table.service';
 
 @Component({
@@ -19,9 +19,18 @@ export class Ng2YaTableFilteringListComponent implements OnInit, OnDestroy {
 
   filter = new FormControl('');
   config: TableColumnFilterList;
+  items: TableColumnFilterListItem[] = [];
 
   ngOnInit(): void {
     this.config = this.column.def.filter.config as TableColumnFilterList;
+
+    if(this.config.list instanceof Array) {
+      this.items = this.config.list;
+    } else {
+      this.subscription.add(this.config.list.subscribe(items => {
+        this.items = items;
+      }));
+    }
 
     this.subscription.add(this.filter.valueChanges.subscribe(filterValue => {
       this.filterValueChanged.emit(filterValue);
