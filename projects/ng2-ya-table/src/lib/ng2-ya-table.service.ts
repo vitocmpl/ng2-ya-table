@@ -64,7 +64,7 @@ export class Ng2YaTableService {
 
       let column: ColumnState = {
         filterValue: null,
-        sortOrder: c.defaultSortOrder,
+        sortOrder: c.sortOrder,
         def: c
       };
 

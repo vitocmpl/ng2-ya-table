@@ -29,7 +29,7 @@ describe('Ng2YaTableService', () => {
             sort: true,
             title: 'Name',
             width: '10rem',
-            defaultSortOrder: 'asc',
+            sortOrder: 'asc',
             filter: {
                 controlType: 'default'
             }
@@ -43,11 +43,11 @@ describe('Ng2YaTableService', () => {
         colsState = [{
             def: columns[0],
             filterValue: null,
-            sortOrder: columns[0].defaultSortOrder
+            sortOrder: columns[0].sortOrder
         }, {
             def: columns[1],
             filterValue: null,
-            sortOrder: columns[1].defaultSortOrder
+            sortOrder: columns[1].sortOrder
         }];
 
         service = new Ng2YaTableService();

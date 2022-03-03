@@ -77,7 +77,7 @@ public columns: TableColumn[] = [
     title: 'Name', 
     name: 'name', 
     sort: true, 
-    defaultSortOrder: 'asc',  
+    sortOrder: 'asc',  
     filter: {
         type: 'default', 
         controlType: 'default',

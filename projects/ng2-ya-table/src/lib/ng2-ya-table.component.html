@@ -13,8 +13,8 @@
             <tr role="row">
                 <th *ngFor="let column of cols" 
                     [style.width]="column.def.width"
-                    [ngClass]="{'sorting-desc': column.sortOrder === 'desc', 'sorting-asc': column.sortOrder === 'asc', 'sorting': column.hasSort }"
-                    [ng2YaTableSorting]="column"
+                    [ngClass]="{'sorting-desc': column.sortOrder === 'desc', 'sorting-asc': column.sortOrder === 'asc', 'sorting': column.def.sort }"
+                    [ng2YaTableSorting]="column.def.sort"
                     (toggled)="onToggleSort(column, $event)">
                     {{column.def.title}}
                 </th>

@@ -4,20 +4,20 @@ import { ColumnState } from './ng2-ya-table.service';
 @Directive({selector: '[ng2YaTableSorting]'})
 export class Ng2YaTableSortingDirective {
 
-  @Input('ng2YaTableSorting') column: ColumnState;
+  @Input('ng2YaTableSorting') enabled = false;
   @Output() toggled = new EventEmitter<boolean>();
 
   @HostListener('click', ['$event'])
   onToggleSort(event: MouseEvent): void {
-    if (event) {
+    if (this.enabled) {
       event.preventDefault();
+      this.toggled.emit(event.shiftKey);
     }
-    this.toggled.emit(event.shiftKey);
   }
 
   @HostListener('mousedown', ['$event'])
   onDisableMouseDown(event: MouseEvent): void {
-    if (event) {
+    if (this.enabled) {
       event.preventDefault();
     }
   }

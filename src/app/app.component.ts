@@ -40,7 +40,7 @@ export class AppComponent {
             title: 'Name',
             name: 'name',
             sort: true,
-            defaultSortOrder: 'asc',
+            sortOrder: 'asc',
             filter: {
                 controlType: 'default',
                 config: {

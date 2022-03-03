@@ -27,7 +27,7 @@ export interface TableColumn {
     title?: string;
     width?: number | string;
     sort?: boolean;
-    defaultSortOrder?: SORT_ORDER;
+    sortOrder?: SORT_ORDER;
     filter?: TableColumnFilter;
     template?: string;
 }
