@@ -1,10 +1,10 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Ng2YaTableSortingDirective } from "./ng2-ya-table-sorting.directive";
 
 @Component({
   template: `
-    <p ng2YaTableSorting (toggled)="toggled($event)">Sorting!</p>
+    <p [ng2YaTableSorting]="true" (toggled)="toggled($event)">Sorting!</p>
   `
 })
 class TestComponent {
@@ -31,6 +31,7 @@ describe('Ng2YaTableCellTemplateDirective', () => {
 
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create', () => {
