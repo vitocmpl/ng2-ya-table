@@ -1,4 +1,6 @@
 <select class="form-control form-select w100" [formControl]="filter">
-    <option value="">{{ config?.nullText }}</option>
-    <option *ngFor="let item of items" [value]="item.value">{{ item.text }}</option>
+  <option value="">{{ config?.nullText }}</option>
+  <option *ngFor="let item of items" [value]="item.value">
+    {{ item.text }}
+  </option>
 </select>

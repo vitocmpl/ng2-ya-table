@@ -2,10 +2,10 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: auto 1fr auto;
-  grid-template-areas: 
-    ". . search"
-    "table table table"
-    "pagination-result pagination .";
+  grid-template-areas:
+    '. . search'
+    'table table table'
+    'pagination-result pagination .';
 
   .ng2-ya-table-search {
     grid-area: search;
@@ -21,8 +21,8 @@
 
   .ng2-ya-table-table {
     grid-area: table;
-    .sorting-asc, 
-    .sorting-desc, 
+    .sorting-asc,
+    .sorting-desc,
     .sorting {
       padding-right: 2rem;
       cursor: pointer;
@@ -41,11 +41,11 @@
     }
 
     .sorting-asc:after {
-      content: "↑";
+      content: '↑';
     }
 
     .sorting-desc:after {
-      content: "↓";
+      content: '↓';
     }
   }
 
@@ -62,7 +62,7 @@
       margin-right: 1rem;
     }
     ul {
-     margin-bottom: 0; 
+      margin-bottom: 0;
     }
     display: flex;
   }

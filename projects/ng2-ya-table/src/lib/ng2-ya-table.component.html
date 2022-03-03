@@ -1,66 +1,103 @@
 <div class="ng2-ya-table-wrapper">
+  <div *ngIf="options.search" class="ng2-ya-table-search">
+    <input
+      type="search"
+      class="form-control"
+      [formControl]="fullTextFilter"
+      [attr.placeholder]="language.search"
+    />
+  </div>
 
-    <div *ngIf="options.search" class="ng2-ya-table-search">
-        <input type="search" class="form-control" [formControl]="fullTextFilter" [attr.placeholder]="language.search" />
-    </div>
+  <div *ngIf="processing" class="ng2-ya-table-processing">
+    <div class="spinner-border" role="status"></div>
+  </div>
 
-    <div *ngIf="processing" class="ng2-ya-table-processing">
-        <div class="spinner-border" role="status"></div>
-    </div>
+  <table
+    class="table ng2-ya-table-table"
+    [ngClass]="options.className"
+    role="grid"
+  >
+    <thead>
+      <tr role="row">
+        <th
+          *ngFor="let column of cols"
+          [style.width]="column.width"
+          [ngClass]="{
+            'sorting-desc': column.sortOrder === 'desc',
+            'sorting-asc': column.sortOrder === 'asc',
+            sorting: column.sort
+          }"
+          [ng2YaTableSorting]="column.sort"
+          (toggled)="onToggleSort(column, $event)"
+        >
+          {{ column.title }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="showFilterRow">
+        <td *ngFor="let column of cols">
+          <div *ngIf="column.filter" [ngSwitch]="column.filter.controlType">
+            <ng2-ya-table-filter-list
+              *ngSwitchCase="'list'"
+              [column]="column"
+              (filterValueChanged)="onChangeFilter(column, $event)"
+            >
+            </ng2-ya-table-filter-list>
+            <ng2-ya-table-filter-default
+              *ngSwitchDefault
+              [column]="column"
+              (filterValueChanged)="onChangeFilter(column, $event)"
+            >
+            </ng2-ya-table-filter-default>
+          </div>
+        </td>
+      </tr>
+      <tr *ngFor="let row of rows; index as i">
+        <td *ngFor="let column of cols">
+          <ng-container
+            [ngTemplateOutlet]="getCellTemplate(column, standardCell)"
+            [ngTemplateOutletContext]="{
+              row: row,
+              rowIndex: i,
+              data: getData(row, column.name),
+              col: column
+            }"
+          >
+          </ng-container>
+          <ng-template #standardCell let-data="data" let-col="col">
+            <span>{{ getData(row, column.name) }}</span>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <table class="table ng2-ya-table-table" [ngClass]="options.className" role="grid">
-        <thead>
-            <tr role="row">
-                <th *ngFor="let column of cols" 
-                    [style.width]="column.width"
-                    [ngClass]="{'sorting-desc': column.sortOrder === 'desc', 'sorting-asc': column.sortOrder === 'asc', 'sorting': column.sort }"
-                    [ng2YaTableSorting]="column.sort"
-                    (toggled)="onToggleSort(column, $event)">
-                    {{column.title}}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngIf="showFilterRow">
-                <td *ngFor="let column of cols">
-                    <div *ngIf="column.filter" [ngSwitch]="column.filter.controlType">
-                        <ng2-ya-table-filter-list *ngSwitchCase="'list'" [column]="column" (filterValueChanged)="onChangeFilter(column, $event)">
-                        </ng2-ya-table-filter-list>
-                        <ng2-ya-table-filter-default *ngSwitchDefault [column]="column" (filterValueChanged)="onChangeFilter(column, $event)">
-                        </ng2-ya-table-filter-default>
-                    </div>
-                </td>
-            </tr>
-            <tr *ngFor="let row of rows; index as i">
-                <td *ngFor="let column of cols">
-                    <ng-container [ngTemplateOutlet]="getCellTemplate(column, standardCell)"
-                        [ngTemplateOutletContext]="{
-                            row: row,
-                            rowIndex: i,
-                            data: getData(row, column.name),
-                            col: column
-                        }">
-                    </ng-container>
-                    <ng-template #standardCell let-data="data" let-col="col">
-                        <span>{{ getData(row, column.name) }}</span>
-                    </ng-template>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <div *ngIf="rows.length > 0" class="ng2-ya-table-pagination-result">
+    <span>{{ getPaginationResult() }}</span>
+  </div>
 
-    <div *ngIf="rows.length > 0" class="ng2-ya-table-pagination-result">
-        <span>{{ getPaginationResult() }}</span>
-    </div>
-
-    <div class="ng2-ya-table-pagination" *ngIf="paging.showPaging && rows.length > 0">
-        <select class="form-control form-select" [formControl]="itemsPerPage">
-            <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
-        </select>
-        <pagination [totalItems]="recordsFiltered" [page]="currentPage" (pageChanged)="onPageChanged($event)"
-            [maxSize]="paging.maxSize" [boundaryLinks]="false" [rotate]="false"
-            [firstText]="language.pagination.first" [lastText]="language.pagination.last"
-            [nextText]="language.pagination.next" [previousText]="language.pagination.previous">
-        </pagination>
-    </div>
+  <div
+    class="ng2-ya-table-pagination"
+    *ngIf="paging.showPaging && rows.length > 0"
+  >
+    <select class="form-control form-select" [formControl]="itemsPerPage">
+      <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">
+        {{ pn }}
+      </option>
+    </select>
+    <pagination
+      [totalItems]="recordsFiltered"
+      [page]="currentPage"
+      (pageChanged)="onPageChanged($event)"
+      [maxSize]="paging.maxSize"
+      [boundaryLinks]="false"
+      [rotate]="false"
+      [firstText]="language.pagination.first"
+      [lastText]="language.pagination.last"
+      [nextText]="language.pagination.next"
+      [previousText]="language.pagination.previous"
+    >
+    </pagination>
+  </div>
 </div>

@@ -7,6 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "format": "npx prettier src/**/*.{ts,html,scss} --write",
+    "format:lib": "npx prettier projects/**/*.{ts,html,scss} --write",
     "e2e": "ng e2e"
   },
   "private": true,
