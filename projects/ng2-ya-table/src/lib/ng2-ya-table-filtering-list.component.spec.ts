@@ -49,7 +49,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
       fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
-    expect(selectElement.options.length).toEqual(2);
+    expect(selectElement.options).toHaveLength(2);
     expect(selectElement.options[0].value).toEqual('');
     expect(selectElement.options[0].text).toEqual('Select a city');
     expect(selectElement.options[1].value).toEqual('Rome');
@@ -75,7 +75,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
       fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
-    expect(selectElement.options.length).toEqual(2);
+    expect(selectElement.options).toHaveLength(2);
     expect(selectElement.options[0].value).toEqual('');
     expect(selectElement.options[0].text).toEqual('Select a city');
     expect(selectElement.options[1].value).toEqual('Rome');
