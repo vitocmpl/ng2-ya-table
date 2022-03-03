@@ -107,6 +107,15 @@
               "devServerTarget": "ng2-ya-table-demo:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     },
@@ -142,9 +151,21 @@
               "styleTransform"
             ]
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ng2-ya-table/**/*.ts",
+              "projects/ng2-ya-table/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "ng2-ya-table-demo"
+  "defaultProject": "ng2-ya-table-demo",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
