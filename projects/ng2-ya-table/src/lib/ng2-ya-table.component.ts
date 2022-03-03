@@ -32,8 +32,13 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   recordsFiltered = 0;
   recordsTotal = 0;
 
-  @Input() options: TableOptions;
-  @Input() paging: TablePaging;
+  @Input() options: TableOptions = {};
+  @Input() paging: TablePaging = {
+    itemsPerPage: 10,
+    itemsPerPageOptions: [10, 25, 50],
+    maxSize: 5,
+    showPaging: true
+  };
 
   @Input() set datasource(value: TableDataSource | any[]) {
     this.service.setDataSource(value);
@@ -54,6 +59,9 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
 
   ngOnInit() {
     this.language = typeof this.options?.language ==="string" ? Languages[this.options?.language] : this.options?.language;
+    if(!this.language) {
+      this.language = Languages["en"];
+    }
 
     this.subscription.add(this.fullTextFilter.valueChanges.pipe(
       debounceTime(300),
