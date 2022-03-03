@@ -128,7 +128,7 @@
       },
       "root": "projects/ng2-ya-table",
       "sourceRoot": "projects/ng2-ya-table/src",
-      "prefix": "lib",
+      "prefix": "ng2-ya-table",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",

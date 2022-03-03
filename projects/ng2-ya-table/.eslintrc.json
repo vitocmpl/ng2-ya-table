@@ -20,7 +20,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "lib",
+            "prefix": "ng2YaTable",
             "style": "camelCase"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "lib",
+            "prefix": "ng2-ya-table",
             "style": "kebab-case"
           }
         ]
