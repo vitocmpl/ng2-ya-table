@@ -111,7 +111,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
     expect(service.sortStack.length).toEqual(1);
@@ -131,7 +131,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
     expect(service.sortStack.length).toEqual(1);
@@ -154,7 +154,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
     expect(service.sortStack.length).toEqual(1);
@@ -174,7 +174,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
     expect(service.sortStack.length).toEqual(1);
@@ -195,7 +195,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
     service.changeFilter(service.columns[0], 'Gaara');

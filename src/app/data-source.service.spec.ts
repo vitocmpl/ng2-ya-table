@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -9,7 +8,6 @@ import { DataSourceService, UserDto } from './data-source.service';
 
 describe('DataSourceService', () => {
   let service: DataSourceService;
-  let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
   let users: UserDto[];
   let request: DatasourceParameters;
@@ -20,7 +18,6 @@ describe('DataSourceService', () => {
       imports: [HttpClientTestingModule]
     });
     service = TestBed.inject(DataSourceService);
-    httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
 
     users = [
