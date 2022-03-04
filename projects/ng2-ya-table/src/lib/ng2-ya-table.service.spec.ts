@@ -56,7 +56,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     service.setDataSource(users);
     service.request({});
 
@@ -73,7 +73,7 @@ describe('Ng2YaTableService', () => {
     let processingCount = 0;
     let result: DatasourceResult = null;
     service.result$.subscribe((r) => (result = r));
-    service.processing$.subscribe((r) => processingCount++);
+    service.processing$.subscribe(() => processingCount++);
     const ds = () =>
       of({
         data: users,
@@ -102,9 +102,9 @@ describe('Ng2YaTableService', () => {
   it('#setpaging should fills request length', () => {
     service.setPaging(25);
 
-    expect(service['lastRequestParams'] as DatasourceParameters).toHaveLength(
-      25
-    );
+    expect(
+      (service['lastRequestParams'] as DatasourceParameters).length
+    ).toEqual(25);
   });
 
   it('#toggleSort should order users by city asc', fakeAsync(() => {
@@ -114,11 +114,11 @@ describe('Ng2YaTableService', () => {
     service.processing$.subscribe((r) => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     service.toggleSort(service.columns[1], false);
     flush();
     expect(service.columns[1].sortOrder).toEqual('asc');
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     expect(processingCount).toEqual(2);
     expect(result).toEqual({
       data: [users[0], users[1]],
@@ -134,14 +134,14 @@ describe('Ng2YaTableService', () => {
     service.processing$.subscribe((r) => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     service.toggleSort(service.columns[1], true);
     flush();
     expect(service.sortStack[0].name).toEqual('name');
     expect(service.sortStack[0].sortOrder).toEqual('asc');
     expect(service.sortStack[1].name).toEqual('address.city');
     expect(service.columns[1].sortOrder).toEqual('asc');
-    expect(service.sortStack).toHaveLength(2);
+    expect(service.sortStack.length).toEqual(2);
     expect(processingCount).toEqual(2);
     expect(result).toEqual({
       data: [users[1], users[0]],
@@ -157,11 +157,11 @@ describe('Ng2YaTableService', () => {
     service.processing$.subscribe((r) => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     service.toggleSort(service.columns[0], true);
     flush();
     expect(service.columns[0].sortOrder).toEqual('desc');
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     expect(processingCount).toEqual(2);
     expect(result).toEqual({
       data: [users[0], users[1]],
@@ -177,12 +177,12 @@ describe('Ng2YaTableService', () => {
     service.processing$.subscribe((r) => processingCount++);
     service.setColumns(columns);
     service.setDataSource(users);
-    expect(service.sortStack).toHaveLength(1);
+    expect(service.sortStack.length).toEqual(1);
     service.toggleSort(service.columns[0], true);
     service.toggleSort(service.columns[0], true);
     flush();
     expect(service.columns[0].sortOrder).toEqual(null);
-    expect(service.sortStack).toHaveLength(0);
+    expect(service.sortStack.length).toEqual(0);
     expect(processingCount).toEqual(4);
     expect(result).toEqual({
       data: [users[0], users[1]],

@@ -5,9 +5,13 @@ import {
 } from './ng2-ya-table-interfaces';
 
 export function getItemValues(item: unknown): string {
-  return Object.entries(item).reduce((str, [p, val]) => {
-    return `${str}${typeof val === 'object' ? getItemValues(val) : val + ';'}`;
-  }, '');
+  return Object.entries(item)
+    .map((i) => i[1])
+    .reduce((str, val) => {
+      return `${str}${
+        typeof val === 'object' ? getItemValues(val) : val + ';'
+      }`;
+    }, '');
 }
 
 function defaultTextFilter(value: string, search: string): boolean {

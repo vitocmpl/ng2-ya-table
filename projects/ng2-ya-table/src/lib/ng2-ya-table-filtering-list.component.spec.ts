@@ -1,9 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
@@ -49,7 +44,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
       fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
-    expect(selectElement.options).toHaveLength(2);
+    expect(selectElement.options.length).toEqual(2);
     expect(selectElement.options[0].value).toEqual('');
     expect(selectElement.options[0].text).toEqual('Select a city');
     expect(selectElement.options[1].value).toEqual('Rome');
@@ -75,7 +70,7 @@ describe('Ng2YaTableFilteringDefaultComponent', () => {
       fixture.nativeElement.querySelector('.form-control');
 
     expect(selectElement).toBeTruthy();
-    expect(selectElement.options).toHaveLength(2);
+    expect(selectElement.options.length).toEqual(2);
     expect(selectElement.options[0].value).toEqual('');
     expect(selectElement.options[0].text).toEqual('Select a city');
     expect(selectElement.options[1].value).toEqual('Rome');

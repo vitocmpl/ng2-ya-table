@@ -28,7 +28,7 @@ const defaultRequestParams: DatasourceParameters = {
 
 @Injectable()
 export class Ng2YaTableService {
-  private localizationInterpolationMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
+  private localizationInterpolationMatcher = /{{\s?([^{}\s]*)\s?}}/g;
   private lastRequestParams = defaultRequestParams;
 
   private dataSource: TableDataSource;
@@ -84,7 +84,7 @@ export class Ng2YaTableService {
     column.sortOrder = getNextSortOrder(column.sortOrder);
 
     if (orderMulti) {
-      let curIndex: number = this.sortStack.indexOf(column);
+      const curIndex: number = this.sortStack.indexOf(column);
       if (curIndex === -1) {
         this.sortStack.push(column);
       } else if (!column.sortOrder) {
@@ -138,7 +138,7 @@ export class Ng2YaTableService {
     return str.replace(
       this.localizationInterpolationMatcher,
       (substring: string, b: string) => {
-        let r = params[b];
+        const r = params[b];
         return r ? r : substring;
       }
     );

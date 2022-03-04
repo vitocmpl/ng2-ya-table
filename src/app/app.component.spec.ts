@@ -72,7 +72,7 @@ describe('AppComponent', () => {
   }));
 
   it('should display alert', () => {
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest.spyOn(window, 'alert').mockImplementation(() => null);
     component.onActionClick(1);
     expect(window.alert).toHaveBeenCalled();
   });
