@@ -8,7 +8,7 @@ import {
   SORT_ORDER,
   TableColumn,
   TableDataSource
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
 
 const sortCycle: SORT_ORDER[] = ['asc', 'desc', null];

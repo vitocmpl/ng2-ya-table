@@ -27,9 +27,9 @@ import {
   TableOptions,
   TablePaging
 } from './ng2-ya-table-interfaces';
-import { Ng2YaTableService } from './ng2-ya-table.service';
-import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
 import { Languages } from './ng2-ya-table-languages';
+import { Ng2YaTableService } from './services/ng2-ya-table.service';
+import { Ng2YaTableCellTemplateDirective } from './directives/ng2-ya-table-cell-template.directive';
 
 @Component({
   selector: 'ng2-ya-table',

@@ -7,7 +7,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { Ng2YaTableFilteringDefaultComponent } from './ng2-ya-table-filtering-default.component';
-import { TableColumn } from './ng2-ya-table-interfaces';
+import { TableColumn } from '../ng2-ya-table-interfaces';
 
 describe('Ng2YaTableFilteringDefaultComponent', () => {
   let component: Ng2YaTableFilteringDefaultComponent;

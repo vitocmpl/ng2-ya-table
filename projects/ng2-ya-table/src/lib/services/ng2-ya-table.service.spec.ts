@@ -4,7 +4,7 @@ import {
   DatasourceParameters,
   DatasourceResult,
   TableColumn
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 import { Ng2YaTableService } from './ng2-ya-table.service';
 
 describe('Ng2YaTableService', () => {

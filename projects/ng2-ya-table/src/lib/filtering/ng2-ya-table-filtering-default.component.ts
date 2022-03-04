@@ -14,7 +14,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
   TableColumn,
   TableColumnFilterDefault
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 
 @Component({
   selector: 'ng2-ya-table-filter-default',

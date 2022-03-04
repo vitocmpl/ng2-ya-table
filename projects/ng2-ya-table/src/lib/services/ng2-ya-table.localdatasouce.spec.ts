@@ -3,7 +3,7 @@ import {
   DatasourceParameters,
   DatasourceResult,
   TableDataSource
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 import {
   Ng2YaTableLocalDataSource,
   getItemValues

@@ -14,7 +14,7 @@ import {
   TableColumn,
   TableColumnFilterList,
   TableColumnFilterListItem
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 
 @Component({
   selector: 'ng2-ya-table-filter-list',

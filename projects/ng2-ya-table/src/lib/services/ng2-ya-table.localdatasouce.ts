@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import {
   DatasourceParameters,
   TableDataSource
-} from './ng2-ya-table-interfaces';
+} from '../ng2-ya-table-interfaces';
 
 export function getItemValues(item: unknown): string {
   return Object.entries(item)
