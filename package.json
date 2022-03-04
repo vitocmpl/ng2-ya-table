@@ -7,9 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "format": "npx prettier src/**/*.{ts,html,scss} --write",
-    "format:lib": "npx prettier projects/**/*.{ts,html,scss} --write",
-    "e2e": "ng e2e"
+    "format": "npx prettier src/**/*.{ts,html,scss} --write && npx prettier projects/**/*.{ts,html,scss} --write",
+    "e2e": "ng e2e",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -49,11 +49,13 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.1.1",
     "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "jest": "^27.5.1",
     "jest-preset-angular": "^11.1.1",
     "karma-coverage": "~2.0.3",
+    "lint-staged": "^12.3.4",
     "ng-packagr": "^13.2.1",
     "prettier": "^2.5.1",
     "protractor": "~7.0.0",
