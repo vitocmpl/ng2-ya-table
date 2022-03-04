@@ -48,7 +48,7 @@ export class Ng2YaTableService {
 
   processing$ = this.processingSubject$.asObservable();
 
-  setDataSource(datasource: TableDataSource | any[]) {
+  setDataSource(datasource: TableDataSource | unknown[]) {
     if (datasource instanceof Array) {
       this.dataSource = new Ng2YaTableLocalDataSource(
         datasource
@@ -114,7 +114,7 @@ export class Ng2YaTableService {
     });
   }
 
-  changeFilter(column: TableColumn, filterValue: any) {
+  changeFilter(column: TableColumn, filterValue: unknown) {
     column.filterValue = filterValue;
 
     this.request({
@@ -134,7 +134,7 @@ export class Ng2YaTableService {
       });
   }
 
-  interpolateLocalization(str: string, params: any) {
+  interpolateLocalization(str: string, params: unknown) {
     return str.replace(
       this.localizationInterpolationMatcher,
       (substring: string, b: string) => {

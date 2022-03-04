@@ -13,7 +13,7 @@ describe('Ng2YaTableLocalDataSource', () => {
   let service: Ng2YaTableLocalDataSource;
   let datasource: TableDataSource;
   let request: DatasourceParameters;
-  let users: any[];
+  let users: unknown[];
 
   beforeEach(() => {
     users = [

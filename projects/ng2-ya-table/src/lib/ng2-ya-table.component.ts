@@ -69,7 +69,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     return this._paging;
   }
 
-  @Input() set datasource(value: TableDataSource | any[]) {
+  @Input() set datasource(value: TableDataSource | unknown[]) {
     this.service.setDataSource(value);
   }
 
@@ -159,15 +159,15 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     this.service.toggleSort(col, shiftKey && this.options.orderMulti);
   }
 
-  onChangeFilter(col: TableColumn, filterValue: any) {
+  onChangeFilter(col: TableColumn, filterValue: unknown) {
     this.service.changeFilter(col, filterValue);
   }
 
-  getData(row: any, propertyName: string): string {
+  getData(row: unknown, propertyName: string): string {
     if (propertyName) {
       return propertyName
         .split('.')
-        .reduce((prev: any, curr: string) => prev[curr], row);
+        .reduce((prev: unknown, curr: string) => prev[curr], row);
     }
     return null;
   }

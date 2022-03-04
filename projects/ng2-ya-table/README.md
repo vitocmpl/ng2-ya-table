@@ -64,7 +64,7 @@ public options: TableOptions = {
     language: "en"
 };
 
-public data: any[] = [...]; //array of data
+public data: unknown[] = [...]; //array of data
 
 public paging: TablePaging = {
     itemsPerPage: 10,
@@ -133,7 +133,7 @@ public columns: TableColumn[] = [
 ```
 
 ```typescript
-public datasource: any = (request: DatasourceParameters): Observable<DatasourceResult> => {
+public datasource: TableDataSource = (request: DatasourceParameters): Observable<DatasourceResult> => {
     return this.service.getUsers(request);
 }
 ```

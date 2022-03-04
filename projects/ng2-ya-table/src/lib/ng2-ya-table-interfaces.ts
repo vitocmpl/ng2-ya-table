@@ -71,7 +71,7 @@ export interface DatasourceParameters {
 
 export interface DatasourceFilter {
   name: string;
-  value: any;
+  value: unknown;
 }
 
 export interface DatasourceOrder {
@@ -79,7 +79,7 @@ export interface DatasourceOrder {
   dir: SORT_ORDER;
 }
 
-export interface DatasourceResult<T = any> {
+export interface DatasourceResult<T = unknown> {
   recordsTotal: number;
   recordsFiltered: number;
   data: T[];

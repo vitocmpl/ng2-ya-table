@@ -14,22 +14,25 @@ export function getItemValues(item: unknown): string {
     }, '');
 }
 
-function defaultTextFilter(value: string, search: string): boolean {
-  return value?.toLowerCase().includes(search?.toLowerCase());
+function defaultTextFilter(value: unknown, search: unknown): boolean {
+  return value
+    ?.toString()
+    .toLowerCase()
+    .includes(search?.toString().toLowerCase());
 }
 
-function getData(item: any, propName: string): string {
+function getData(item: unknown, propName: string): string {
   if (propName) {
     return propName
       .split('.')
-      .reduce((prev: any, curr: string) => prev[curr], item);
+      .reduce((prev: unknown, curr: string) => prev[curr], item);
   }
 }
 
 export class Ng2YaTableLocalDataSource {
-  private data: any[] = [];
+  private data: unknown[] = [];
 
-  constructor(data: any[]) {
+  constructor(data: unknown[]) {
     this.data = data;
   }
 
@@ -54,7 +57,7 @@ export class Ng2YaTableLocalDataSource {
       [...request.orders].reverse().forEach((column) => {
         const dir = column.dir === 'asc' ? 1 : -1;
 
-        const compare = (direction: number, a: any, b: any) => {
+        const compare = (direction: number, a: unknown, b: unknown) => {
           if (a < b) {
             return -1 * direction;
           }
