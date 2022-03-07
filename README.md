@@ -79,7 +79,6 @@ public columns: TableColumn[] = [
     sort: true, 
     sortOrder: 'asc',  
     filter: {
-        type: 'default', 
         controlType: 'default',
         config: {
             placeholder: 'Filter by name'
@@ -91,7 +90,6 @@ public columns: TableColumn[] = [
     name: 'username', 
     sort: true, 
     filter: {
-        type: 'default', 
         controlType: 'default',
         config: {
             placeholder: 'Filter by username'
@@ -103,7 +101,6 @@ public columns: TableColumn[] = [
     name: 'email', 
     sort: true, 
     filter: {
-        type: 'default', 
         controlType: 'default',
         config: {
             placeholder: 'Filter by email'
@@ -137,11 +134,6 @@ public datasource: TableDataSource = (request: DatasourceParameters): Observable
     return this.service.getUsers(request);
 }
 ```
-
-
-## Server-Side plugin
-
-.NET Standard library datasource utils [ng2-ya-table.DataSource.Core](https://github.com/vitocmpl/ng2-ya-table.DataSource.Core).
 
 
 ## Further Documentation
