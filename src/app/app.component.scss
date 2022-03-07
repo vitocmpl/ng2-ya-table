@@ -1,0 +1,12 @@
+:host ::ng-deep {
+  .sorting-asc:after,
+  .sorting-desc:after {
+    font-family: 'Material Icons Outlined';
+  }
+  .sorting-asc:after {
+    content: 'keyboard_arrow_up' !important;
+  }
+  .sorting-desc:after {
+    content: 'keyboard_arrow_down' !important;
+  }
+}
