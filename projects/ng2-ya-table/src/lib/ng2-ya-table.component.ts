@@ -59,7 +59,10 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   recordsFiltered = 0;
   recordsTotal = 0;
 
-  @Input() options: TableOptions = {};
+  @Input() options: TableOptions = {
+    language: 'en',
+    search: true
+  };
 
   @Input() set paging(value: TablePaging) {
     this._paging = value;
@@ -155,7 +158,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     });
   }
 
-  onToggleSort(col: TableColumn, shiftKey: true) {
+  onToggleSort(col: TableColumn, shiftKey: boolean) {
     this.service.toggleSort(col, shiftKey && this.options.orderMulti);
   }
 
@@ -169,7 +172,6 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
         .split('.')
         .reduce((prev: unknown, curr: string) => prev[curr], row);
     }
-    return null;
   }
 
   getCellTemplate(
