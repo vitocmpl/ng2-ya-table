@@ -13,6 +13,7 @@ jobs:
     - name: All things angular
       uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
       with:
+        github_access_token: ${{ secrets.ACCESS_TOKEN }}
         build_configuration: production
         base_href: /ng2-ya-table/
         deploy_branch: gh-pages
