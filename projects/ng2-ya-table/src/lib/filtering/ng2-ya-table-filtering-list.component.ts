@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -31,6 +32,8 @@ export class Ng2YaTableFilteringListComponent implements OnInit, OnDestroy {
   config: TableColumnFilterList;
   items: TableColumnFilterListItem[] = [];
 
+  constructor(private cdRef: ChangeDetectorRef) {}
+
   ngOnInit(): void {
     this.config = this.column.filter.config as TableColumnFilterList;
 
@@ -39,6 +42,7 @@ export class Ng2YaTableFilteringListComponent implements OnInit, OnDestroy {
     } else {
       this.subscription.add(
         this.config.list.subscribe((items) => {
+          this.cdRef.markForCheck();
           this.items = items;
         })
       );
