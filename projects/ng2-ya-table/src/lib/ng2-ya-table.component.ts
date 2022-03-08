@@ -1,298 +1,204 @@
-import { Component, Input, OnInit, OnChanges, OnDestroy, SimpleChanges, ContentChildren, QueryList, TemplateRef } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Observable, Subject, Subscription } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChildren,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { DatasourceOrder, DatasourceFilter, DatasourceParameters, DatasourceResult, TableDataSource, TableOptions, TableColumn, TablePaging } from './ng2-ya-table-interfaces';
-import { ColumnState, Ng2YaTableService } from './ng2-ya-table.service';
-import { Ng2YaTableLocalDataSource } from './ng2-ya-table.localdatasouce';
-import { Ng2YaTableCellTemplateDirective } from './ng2-ya-table-cell-template.directive';
+
+import {
+  PageChangedEvent,
+  PaginationComponent
+} from 'ngx-bootstrap/pagination';
+
+import {
+  LanguageMap,
+  TableColumn,
+  TableDataSource,
+  TableOptions,
+  TablePaging
+} from './ng2-ya-table-interfaces';
+import { Languages } from './ng2-ya-table-languages';
+import { Ng2YaTableService } from './services/ng2-ya-table.service';
+import { Ng2YaTableCellTemplateDirective } from './directives/ng2-ya-table-cell-template.directive';
 
 @Component({
   selector: 'ng2-ya-table',
-  template: `
-    <div class="ng2-ya-table_wrapper cointainer">
-      <div class="row">
-        <div class="col-6">
-          <label *ngIf="paging.showPaging">
-            <span *ngFor="let s of state.language.lengthMenu.split(' ')">
-              <span [ngSwitch]="s">
-                <select *ngSwitchCase="'_MENU_'" class="d-inline-block form-control input-sm" style="width:80px" [(ngModel)]="state.paging.itemsPerPage" (change)="state.changePaging(1, $event.target.value)">
-                  <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">{{pn}}</option>
-                </select>
-                <span *ngSwitchDefault> {{s}} </span>
-              </span>
-            </span>
-          </label>
-        </div>
-        <div class="col-6">
-          <div *ngIf="options.search" class="float-right">
-            <label>
-              <span>{{state.language.search}} </span>
-              <input type="search" class="d-inline-block form-control input-sm" style="width: auto"
-                [(ngModel)]="state.fullTextFilter"
-                (ngModelChange)="onFullTextFilterValueChange($event)"/>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <div *ngIf="processing" class="ng2-ya-table_processing">{{state.language.processing}}</div>
-          <table class="table ng2-ya-table" ngClass="{{options.className || ''}}" role="grid">
-            <thead>
-              <tr role="row">
-                <th *ngFor="let column of state.columns" 
-                  [style.width]="column.def.width"
-                  [ngClass]="{'sorting_desc': column.sortOrder === 'desc', 'sorting_asc': column.sortOrder === 'asc', 'sorting': column.hasSort }"
-                  [ng2YaTableSorting]="column">
-                  {{column.def.title}}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngIf="state.showFilterRow">
-                <td *ngFor="let column of state.columns">
-                  <div *ngIf="column.def.filter" [ngSwitch]="column.def.filter.controlType">
-                    <ng2-ya-table-filter-list *ngSwitchCase="'list'" [column]="column"></ng2-ya-table-filter-list>
-                    <ng2-ya-table-filter-default *ngSwitchDefault [column]="column"></ng2-ya-table-filter-default>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngFor="let row of rows; index as i">
-                <td (click)="cellClick(row, column)" *ngFor="let column of columns">
-                  <ng-container
-                    [ngTemplateOutlet]="getCellTemplate(column, standardCell)"
-                    [ngTemplateOutletContext]="{
-                        row: row,
-                        rowIndex: i,
-                        data: getData(row, column.name),
-                        col: column
-                      }">
-                  </ng-container>
-                  <ng-template #standardCell let-data="data" let-col="col">
-                    <span>{{ getData(row, column.name) }}</span>
-                  </ng-template>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <div *ngIf="rows.length > 0" role="status">
-            <span *ngFor="let s of state.language.info.split(' ')">
-              <span [ngSwitch]="s">
-                <span *ngSwitchCase="'_START_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + 1}} </span>
-                <span *ngSwitchCase="'_END_'">{{(state.paging.currentPage - 1) * state.paging.itemsPerPage + rows.length}} </span>
-                <span *ngSwitchCase="'_TOTAL_'">{{state.paging.recordsFiltered}} </span>
-                <span *ngSwitchDefault>{{s}} </span>
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="float-right">
-            <pagination *ngIf="rows.length > 0"
-              [(ngModel)]="state.paging.currentPage"
-              [totalItems]="state.paging.recordsFiltered"
-              [itemsPerPage]="state.paging.itemsPerPage"
-              [maxSize]="paging.maxSize"
-              [boundaryLinks]="false"
-              [rotate]="false"
-              (pageChanged)="state.changePaging($event.page, $event.itemsPerPage)"
-              [firstText] = "state.language.pagination.first"
-              [lastText] = "state.language.pagination.last"
-              [nextText] = "state.language.pagination.next"
-              [previousText] = "state.language.pagination.previous">
-            </pagination>
-          </div>
-        </div>
-      </div>
-    </div>`,
-  styles: [
-    `div.ng2-ya-table_wrapper div.ng2-ya-table_processing {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 200px;
-      margin-left: -100px;
-      margin-top: -26px;
-      text-align: center;
-      padding: 1em 0;
-    }`,
-    `table.ng2-ya-table thead > tr > th.sorting_asc, 
-    table.ng2-ya-table thead > tr > th.sorting_desc, 
-    table.ng2-ya-table thead > tr > th.sorting,
-    table.ng2-ya-table thead > tr > td.sorting_asc,
-    table.ng2-ya-table thead > tr > td.sorting_desc,
-    table.ng2-ya-table thead > tr > td.sorting {
-      padding-right: 30px;
-    }`,
-    `table.ng2-ya-table thead .sorting,
-    table.ng2-ya-table thead .sorting_asc,
-    table.ng2-ya-table thead .sorting_desc,
-    table.ng2-ya-table thead .sorting_asc_disabled,
-    table.ng2-ya-table thead .sorting_desc_disabled {
-      cursor: pointer;
-      position: relative;
-    }`,
-    `table.ng2-ya-table thead .sorting:after,
-    table.ng2-ya-table thead .sorting_asc:after,
-    table.ng2-ya-table thead .sorting_desc:after,
-    table.ng2-ya-table thead .sorting_asc_disabled:after,
-    table.ng2-ya-table thead .sorting_desc_disabled:after {
-      position: absolute;
-      bottom: 12px;
-      right: 8px;
-      display: block;
-      opacity: 0.5;
-    }`,
-    `table.ng2-ya-table thead .sorting_asc:after {
-      content: "↑";
-    }`,
-    `table.ng2-ya-table thead .sorting_desc:after {
-      content: "↓";
-    }`,
-    `table.ng2-ya-table thead .sorting_asc_disabled:after,
-    table.ng2-ya-table thead .sorting_desc_disabled:after {
-      color: #eee;
-    }`],
-  providers: [Ng2YaTableService]
+  templateUrl: './ng2-ya-table.component.html',
+  styleUrls: ['./ng2-ya-table.component.scss'],
+  providers: [Ng2YaTableService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
-export class Ng2YaTableComponent implements OnChanges, OnDestroy, OnInit {
-  private subscription : Subscription;
-  private fullTextFilterValueChanged: Subject<string> = new Subject<string>();
+export class Ng2YaTableComponent implements OnDestroy, OnInit {
+  private subscription = new Subscription();
+  private _paging: TablePaging = {
+    itemsPerPage: 10,
+    itemsPerPageOptions: [10, 25, 50],
+    maxSize: 5,
+    showPaging: true
+  };
 
-  processing:boolean = false;
-  @Input() options: TableOptions = null;
-  @Input() rows:Array<any> | TableDataSource = [];
-  @Input() datasource: TableDataSource | Array<any> = null;
-  @Input() columns: Array<TableColumn> = [];
-  @Input() paging: TablePaging = null;
-  @ContentChildren(Ng2YaTableCellTemplateDirective) cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
+  itemsPerPage = new FormControl(0);
+  fullTextFilter = new FormControl('');
 
-  public constructor(private sanitizer:DomSanitizer, public state: Ng2YaTableService) { 
-    this.fullTextFilterValueChanged.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(filterValue => this.onChangeTable());
+  language: LanguageMap = null;
+  showFilterRow = false;
+  processing = false;
+  rows = [];
+  currentPage = 1;
+  recordsFiltered = 0;
+  recordsTotal = 0;
+
+  @Input() options: TableOptions = {
+    language: 'en',
+    search: true
+  };
+
+  @Input() set paging(value: TablePaging) {
+    this._paging = value;
+    this.service.setPaging(value.itemsPerPage);
   }
+  get paging(): TablePaging {
+    return this._paging;
+  }
+
+  @Input() set datasource(value: TableDataSource | unknown[]) {
+    this.service.setDataSource(value);
+  }
+
+  @Input() set columns(value: TableColumn[]) {
+    this.showFilterRow = value.some((c) => !!c.filter);
+    this.service.setColumns(value);
+  }
+  get cols(): TableColumn[] {
+    return this.service.columns;
+  }
+
+  @ViewChild(PaginationComponent) pagination: PaginationComponent;
+  @ContentChildren(Ng2YaTableCellTemplateDirective)
+  cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
+
+  public constructor(
+    private service: Ng2YaTableService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.subscription = this.state.stateChanged$.subscribe(() => this.onChangeTable());
+    this.language =
+      typeof this.options?.language === 'string'
+        ? Languages[this.options?.language]
+        : this.options?.language;
+    if (!this.language) {
+      this.language = Languages['en'];
+    }
+
+    this.subscription.add(
+      this.fullTextFilter.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe((filterValue) => {
+          this.service.request({
+            fullTextFilter: filterValue,
+            start: 0
+          });
+        })
+    );
+
+    this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
+    this.subscription.add(
+      this.itemsPerPage.valueChanges.subscribe((itemsPerPage) => {
+        const page = this.pagination.page;
+        this.pagination.itemsPerPage = itemsPerPage;
+        if (page === this.pagination.page) {
+          this.service.request({
+            start: (page - 1) * itemsPerPage,
+            length: itemsPerPage
+          });
+        }
+      })
+    );
+
+    this.subscription.add(
+      this.service.result$.subscribe((result) => {
+        this.cdRef.markForCheck();
+        this.rows = result.data;
+        this.recordsFiltered = result.recordsFiltered;
+        this.recordsTotal = result.recordsTotal;
+      })
+    );
+
+    this.subscription.add(
+      this.service.processing$.subscribe((result) => {
+        this.cdRef.markForCheck();
+        this.processing = result;
+      })
+    );
+
+    this.service.request({});
   }
 
-  ngOnChanges (changes: SimpleChanges) : void {
-    if (changes.options && changes.options.isFirstChange()) {
-      this.state.setOptions(changes.options.currentValue);
-    }
-    if (changes.paging && changes.paging.isFirstChange()) {
-      this.state.setPaging(changes.paging.currentValue);
-    }
-    if (changes.columns && changes.columns.isFirstChange()) {
-      this.state.setColumns(changes.columns.currentValue);
-    }
-    if(changes.datasource && !changes.datasource.isFirstChange()){
-      this.onChangeTable();
-    }
-  }
-
-  ngOnDestroy () : void {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  public sanitize(html:string):SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
+  onPageChanged(event: PageChangedEvent) {
+    this.currentPage = event.page;
+    this.service.request({
+      start: (event.page - 1) * event.itemsPerPage,
+      length: event.itemsPerPage
+    });
   }
 
-  public onChangeTable():void {
-    if(this.datasource)
-    {
-      this.processing = true;
+  onToggleSort(col: TableColumn, shiftKey: boolean) {
+    this.service.toggleSort(col, shiftKey && this.options.orderMulti);
+  }
 
-      let orders: Array<DatasourceOrder> = new Array<DatasourceOrder>();
-      this.state.sortStack.forEach((column:ColumnState) => {
-        let order: DatasourceOrder = {
-          dir: column.sortOrder,
-          name: column.def.name
-        };
-        orders.push(order);
-      });
+  onChangeFilter(col: TableColumn, filterValue: unknown) {
+    this.service.changeFilter(col, filterValue);
+  }
 
-      let filters: Array<DatasourceFilter> = new Array<DatasourceFilter>();
-      this.state.columns.forEach((column: ColumnState) => {
-        if(column.hasFilter) {
-          let filter: DatasourceFilter = {
-            name: column.def.name,
-            type: column.def.filter.type,
-            value: column.filterValue
-          };
-          filters.push(filter);
-        }
-      });
+  getData(row: unknown, propertyName: string): string {
+    if (propertyName) {
+      return propertyName
+        .split('.')
+        .reduce((prev: unknown, curr: string) => prev[curr], row);
+    }
+  }
 
-      let request: DatasourceParameters = { 
-        start: (this.state.paging.currentPage - 1) * this.state.paging.itemsPerPage, 
-        length: this.state.paging.itemsPerPage,
-        filters: filters,
-        orders: orders,
-        fullTextFilter: this.state.fullTextFilter
-      };
-
-      let observable: Observable<any> =  null;
-      if (this.datasource instanceof Array) {
-        observable = new Ng2YaTableLocalDataSource(this.datasource).asObservable(request);
-      } else {
-        observable = this.datasource(request);
-      }
-
-      observable.subscribe(
-          (result: DatasourceResult) => {
-            this.rows = result.data;
-            this.state.paging.recordsFiltered = result.recordsFiltered;
-            this.state.paging.recordsTotal = result.recordsTotal;
-          },
-          error => {
-            console.log(error);
-          },
-          () => {
-            this.processing = false;
-          }
+  getCellTemplate(
+    col: TableColumn,
+    standardTemplate: TemplateRef<HTMLElement>
+  ): TemplateRef<HTMLElement> {
+    if (!!col.template || !!col.name) {
+      const templates = this.cellTemplates.filter(
+        (p) =>
+          p.ng2YaTableCellTemplate === (col.template ? col.template : col.name)
       );
-    }
-  }
-
-  public getHtml(row:any, column:TableColumn): string {
-    if(column.render){
-      let data: any = this.getData(row, column.name);
-      return column.render(data, row);
-    }
-    return this.getData(row, column.name);
-  }
-
-  public getData(row:any, propertyName:string):string {
-    return propertyName.split('.').reduce((prev:any, curr:string) => prev[curr], row);
-  }
-
-  public cellClick(row:any, column:TableColumn):void {
-    if(column.action){
-      let data = this.getData(row, column.name);
-      column.action(data, row);
-    }
-  }
-
-  onFullTextFilterValueChange(event: any){
-    this.fullTextFilterValueChanged.next(event)
-  }
-
-  getCellTemplate(col: TableColumn, standardTemplate: TemplateRef<any>): TemplateRef<any> {
-    let template = this.cellTemplates.filter(p => p.ng2YaTableCellTemplate === col.name);
-    if (template.length > 0) {
-      return template.map(p => p.templateRef)[0];
+      if (templates.length > 0) {
+        return templates.map((p) => p.templateRef)[0];
+      }
     }
     return standardTemplate;
+  }
+
+  getPaginationResult() {
+    return this.service.interpolateLocalization(this.language.info as string, {
+      start: (this.currentPage - 1) * this.itemsPerPage.value + 1,
+      end: (this.currentPage - 1) * this.itemsPerPage.value + this.rows.length,
+      total: this.recordsFiltered
+    });
+  }
+
+  refresh() {
+    this.service.request({});
   }
 }

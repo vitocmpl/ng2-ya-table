@@ -1,0 +1,75 @@
+.ng2-ya-table-wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    '. . search'
+    'table table table'
+    'pagination-result pagination .';
+
+  .ng2-ya-table-search {
+    grid-area: search;
+    padding-bottom: 1rem;
+  }
+
+  .ng2-ya-table-processing {
+    grid-area: table;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ng2-ya-table-table {
+    grid-area: table;
+    .sorting-asc,
+    .sorting-desc,
+    .sorting {
+      padding-right: 2rem;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .sorting:after,
+    .sorting-asc:after,
+    .sorting-desc:after {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      display: block;
+      font-weight: bold;
+      font-size: large;
+    }
+
+    .sorting-asc:after {
+      content: '↑';
+    }
+
+    .sorting-desc:after {
+      content: '↓';
+    }
+  }
+
+  .ng2-ya-table-pagination-result {
+    grid-area: pagination-result;
+    align-self: center;
+  }
+
+  .ng2-ya-table-pagination {
+    grid-area: pagination;
+    justify-self: center;
+    align-self: center;
+    :first-child {
+      margin-right: 1rem;
+    }
+    ul {
+      margin-bottom: 0;
+    }
+    display: flex;
+  }
+
+  .ng2-ya-table-pagination-size {
+    grid-area: pagination-size;
+    justify-self: end;
+    align-self: center;
+  }
+}

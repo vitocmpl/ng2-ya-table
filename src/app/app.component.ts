@@ -1,88 +1,122 @@
 import { Component } from '@angular/core';
-import { DataSourceService } from './data-source.service';
+import { DataSourceService, UserDto } from './data-source.service';
 import { Observable } from 'rxjs';
-import { DatasourceParameters, DatasourceResult, TableColumn, TableDataSource, TableOptions, TablePaging } from 'ng2-ya-table';
+import {
+  DatasourceParameters,
+  DatasourceResult,
+  TableColumn,
+  TableColumnFilterListItem,
+  TableDataSource,
+  TableOptions,
+  TablePaging
+} from 'ng2-ya-table';
+import { faEdit, faHome, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [ DataSourceService ]
+  styleUrls: ['./app.component.scss'],
+  providers: [DataSourceService]
 })
 export class AppComponent {
-  constructor(private service: DataSourceService) { }
+  faHome = faHome;
+  faTrash = faTrash;
+  faEdit = faEdit;
 
-  public options: TableOptions = {
-      orderMulti: false,
-      className: ['table-striped'],
-      language: "en",
-      search: true
+  options: TableOptions = {
+    orderMulti: true,
+    className: ['table-striped'],
+    language: 'en',
+    search: true
   };
 
-  public datasource: TableDataSource = (request: DatasourceParameters): Observable<DatasourceResult> => {
+  datasource: TableDataSource = (
+    request: DatasourceParameters
+  ): Observable<DatasourceResult<UserDto>> => {
     return this.service.getUsersDataSource(request);
-  }
+  };
 
-  public paging: TablePaging = {
-      itemsPerPage: 10,
-      itemsPerPageOptions: [5, 10, 25, 50, 100],
-      maxSize: 5,
-      showPaging: true
-  }
+  paging: TablePaging = {
+    itemsPerPage: 10,
+    itemsPerPageOptions: [5, 10, 25, 50, 100],
+    maxSize: 5,
+    showPaging: true
+  };
 
-  public columns: TableColumn[] = [
-    { 
-        title: 'Name', 
-        name: 'name', 
-        sort: true, 
-        defaultSortOrder: 'asc',  
-        filter: {
-            type: 'default', 
-            controlType: 'default',
-            config: {
-                placeholder: 'Filter by name'
-            }
-        } 
+  columns: TableColumn[] = [
+    {
+      title: 'Name',
+      name: 'name',
+      sort: true,
+      sortOrder: 'asc',
+      filter: {
+        controlType: 'default',
+        config: {
+          placeholder: 'Filter by name'
+        }
+      }
     },
-    { 
-        title: 'Username', 
-        name: 'username', 
-        sort: true, 
-        filter: {
-            type: 'default', 
-            controlType: 'default',
-            config: {
-                placeholder: 'Filter by username'
-            }
-        } 
+    {
+      title: 'Username',
+      name: 'username',
+      sort: true,
+      filter: {
+        controlType: 'default',
+        config: {
+          placeholder: 'Filter by username'
+        }
+      }
     },
-    { 
-        title: 'Email', 
-        name: 'email', 
-        sort: true, 
-        filter: {
-            type: 'default', 
-            controlType: 'default',
-            config: {
-                placeholder: 'Filter by email'
-            }
-        } 
+    {
+      title: 'Email',
+      name: 'email',
+      sort: true,
+      filter: {
+        controlType: 'default',
+        config: {
+          placeholder: 'Filter by email'
+        }
+      }
     },
-    { 
-        sort: false, 
-        title: '', 
-        name: 'btnEdit',
-        width: "10px"
+    {
+      title: 'City',
+      name: 'address.city',
+      sort: true,
+      filter: {
+        controlType: 'list',
+        config: {
+          list: this.service.getCities().pipe(
+            map((result) => {
+              return result.map((c) => {
+                const item: TableColumnFilterListItem = {
+                  value: c,
+                  text: c
+                };
+                return item;
+              });
+            })
+          )
+        }
+      }
     },
-    { 
-        sort: false, 
-        title: '', 
-        name: 'btnDelete',
-        width: "10px"
+    {
+      sort: false,
+      title: '',
+      template: 'btnEdit',
+      width: '3rem'
+    },
+    {
+      sort: false,
+      title: '',
+      template: 'btnDelete',
+      width: '3rem'
     }
   ];
 
-  onActionClick(row: number) {
-    alert("Id: " + row);
+  constructor(private service: DataSourceService) {}
+
+  onActionClick(row: number): void {
+    alert('Id: ' + row);
   }
 }
