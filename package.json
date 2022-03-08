@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "npx prettier src/**/*.{ts,html,scss} --write && npx prettier projects/**/*.{ts,html,scss} --write",
+    "deploy": "ng deploy --base-href=/ng2-ya-table/",
     "e2e": "ng e2e",
     "prepare": "husky install"
   },
@@ -45,6 +46,7 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "5.11.0",
     "@typescript-eslint/parser": "5.11.0",
+    "angular-cli-ghpages": "^1.0.0",
     "eslint": "^8.2.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.1.1",
