@@ -106,6 +106,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
       this.fullTextFilter.valueChanges
         .pipe(debounceTime(300), distinctUntilChanged())
         .subscribe((filterValue) => {
+          this.currentPage = 1;
           this.service.request({
             fullTextFilter: filterValue,
             start: 0

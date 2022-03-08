@@ -89,6 +89,7 @@
     <pagination
       [totalItems]="recordsFiltered"
       [page]="currentPage"
+      [itemsPerPage]="itemsPerPage.value"
       (pageChanged)="onPageChanged($event)"
       [maxSize]="paging.maxSize"
       [boundaryLinks]="false"
