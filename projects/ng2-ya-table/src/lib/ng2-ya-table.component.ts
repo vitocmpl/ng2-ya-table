@@ -8,17 +8,11 @@ import {
   OnInit,
   QueryList,
   TemplateRef,
-  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
-import {
-  PageChangedEvent,
-  PaginationComponent
-} from 'ngx-bootstrap/pagination';
 
 import {
   LanguageMap,
@@ -30,6 +24,7 @@ import {
 import { Languages } from './ng2-ya-table-languages';
 import { Ng2YaTableService } from './services/ng2-ya-table.service';
 import { Ng2YaTableCellTemplateDirective } from './directives/ng2-ya-table-cell-template.directive';
+import { PageChangedEvent } from './pagination/ng2-ya-table-pagination.component';
 
 @Component({
   selector: 'ng2-ya-table',
@@ -48,7 +43,6 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     showPaging: true
   };
 
-  itemsPerPage = new FormControl(0);
   fullTextFilter = new FormControl('');
 
   language: LanguageMap = null;
@@ -56,6 +50,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
   processing = false;
   rows = [];
   currentPage = 1;
+  itemsPerPage = 10;
   recordsFiltered = 0;
   recordsTotal = 0;
 
@@ -66,6 +61,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
 
   @Input() set paging(value: TablePaging) {
     this._paging = value;
+    this.itemsPerPage = value.itemsPerPage;
     this.service.setPaging(value.itemsPerPage);
   }
   get paging(): TablePaging {
@@ -84,7 +80,6 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
     return this.service.columns;
   }
 
-  @ViewChild(PaginationComponent) pagination: PaginationComponent;
   @ContentChildren(Ng2YaTableCellTemplateDirective)
   cellTemplates: QueryList<Ng2YaTableCellTemplateDirective>;
 
@@ -114,20 +109,6 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
         })
     );
 
-    this.itemsPerPage.setValue(this.paging.itemsPerPage, { emitEvent: false });
-    this.subscription.add(
-      this.itemsPerPage.valueChanges.subscribe((itemsPerPage) => {
-        const page = this.pagination.page;
-        this.pagination.itemsPerPage = itemsPerPage;
-        if (page === this.pagination.page) {
-          this.service.request({
-            start: (page - 1) * itemsPerPage,
-            length: itemsPerPage
-          });
-        }
-      })
-    );
-
     this.subscription.add(
       this.service.result$.subscribe((result) => {
         this.cdRef.markForCheck();
@@ -153,6 +134,7 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
 
   onPageChanged(event: PageChangedEvent) {
     this.currentPage = event.page;
+    this.itemsPerPage = event.itemsPerPage;
     this.service.request({
       start: (event.page - 1) * event.itemsPerPage,
       length: event.itemsPerPage
@@ -193,8 +175,8 @@ export class Ng2YaTableComponent implements OnDestroy, OnInit {
 
   getPaginationResult() {
     return this.service.interpolateLocalization(this.language.info as string, {
-      start: (this.currentPage - 1) * this.itemsPerPage.value + 1,
-      end: (this.currentPage - 1) * this.itemsPerPage.value + this.rows.length,
+      start: (this.currentPage - 1) * this.itemsPerPage + 1,
+      end: (this.currentPage - 1) * this.itemsPerPage + this.rows.length,
       total: this.recordsFiltered
     });
   }

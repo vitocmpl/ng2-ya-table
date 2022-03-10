@@ -56,20 +56,5 @@
 
   .ng2-ya-table-pagination {
     grid-area: pagination;
-    justify-self: center;
-    align-self: center;
-    :first-child {
-      margin-right: 1rem;
-    }
-    ul {
-      margin-bottom: 0;
-    }
-    display: flex;
-  }
-
-  .ng2-ya-table-pagination-size {
-    grid-area: pagination-size;
-    justify-self: end;
-    align-self: center;
   }
 }

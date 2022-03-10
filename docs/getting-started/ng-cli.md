@@ -16,7 +16,7 @@ ng serve
  - install `ng2-ya-table`, `ngx-bootstrap` and `bootstrap`
 
  ```bash
-   npm install ng2-ya-table ngx-bootstrap bootstrap --save
+   npm install ng2-ya-table bootstrap --save
  ```
  
 - open `src/app/app.module.ts` and add

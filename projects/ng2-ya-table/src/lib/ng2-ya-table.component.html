@@ -77,28 +77,16 @@
     <span>{{ getPaginationResult() }}</span>
   </div>
 
-  <div
+  <ng2-ya-table-pagination
     class="ng2-ya-table-pagination"
     *ngIf="paging.showPaging && rows.length > 0"
-  >
-    <select class="form-control form-select" [formControl]="itemsPerPage">
-      <option *ngFor="let pn of paging.itemsPerPageOptions" [value]="pn">
-        {{ pn }}
-      </option>
-    </select>
-    <pagination
-      [totalItems]="recordsFiltered"
-      [page]="currentPage"
-      [itemsPerPage]="itemsPerPage.value"
-      (pageChanged)="onPageChanged($event)"
-      [maxSize]="paging.maxSize"
-      [boundaryLinks]="false"
-      [rotate]="false"
-      [firstText]="language.pagination.first"
-      [lastText]="language.pagination.last"
-      [nextText]="language.pagination.next"
-      [previousText]="language.pagination.previous"
-    >
-    </pagination>
-  </div>
+    [totalItems]="recordsFiltered"
+    [page]="currentPage"
+    [itemsPerPage]="itemsPerPage"
+    [itemsPerPageOptions]="paging.itemsPerPageOptions"
+    (paginationChanged)="onPageChanged($event)"
+    [maxSize]="paging.maxSize"
+    [nextText]="language.pagination.next"
+    [previousText]="language.pagination.previous"
+  ></ng2-ya-table-pagination>
 </div>
