@@ -140,9 +140,6 @@ THE SOFTWARE.
 ng2-ya-table
 MIT
 
-ngx-bootstrap/pagination
-MIT
-
 rxjs
 Apache-2.0
                                Apache License
