@@ -183,55 +183,7 @@ describe('Ng2YaTableComponent', () => {
       '.ng2-ya-table-pagination'
     );
     expect(paginationDiv).toBeTruthy();
-
-    /*const select: HTMLSelectElement =
-      paginationDiv.querySelector('.form-select');
-    expect(select).toBeTruthy();
-    expect(select.options.length).toEqual(3);
-    expect(select.options[0].value).toEqual('10');
-    expect(select.options[1].value).toEqual('25');
-    expect(select.options[2].value).toEqual('50');*/
   });
-
-  // it('should create with custom paging', () => {
-  //   const setPagingSpy = jest.spyOn(serviceStub, 'setPaging');
-
-  //   const setDatasourceSpy = jest
-  //     .spyOn(serviceStub, 'setDataSource')
-  //     .mockImplementation(
-  //       (v: unknown[]) =>
-  //         (serviceStub.result$ = of({
-  //           data: v,
-  //           recordsFiltered: 2,
-  //           recordsTotal: 2
-  //         }))
-  //     );
-
-  //   component.datasource = users;
-  //   component.paging = {
-  //     itemsPerPage: 100,
-  //     itemsPerPageOptions: [100, 200],
-  //     showPaging: true,
-  //     maxSize: 5
-  //   };
-
-  //   fixture.detectChanges();
-
-  //   expect(setPagingSpy).toHaveBeenCalled();
-  //   expect(setDatasourceSpy).toHaveBeenCalled();
-
-  //   //pagination
-  //   const paginationDiv = fixture.nativeElement.querySelector(
-  //     '.ng2-ya-table-pagination'
-  //   );
-  //   expect(paginationDiv).toBeTruthy();
-  //   const select: HTMLSelectElement =
-  //     paginationDiv.querySelector('.form-select');
-  //   expect(select).toBeTruthy();
-  //   expect(select.options.length).toEqual(2);
-  //   expect(select.options[0].value).toEqual('100');
-  //   expect(select.options[1].value).toEqual('200');
-  // });
 
   it('should create with no paging', () => {
     const setPagingSpy = jest.spyOn(serviceStub, 'setPaging');
@@ -342,59 +294,6 @@ describe('Ng2YaTableComponent', () => {
     expect(table.rows.length).toEqual(2);
     expect(paginationResultDiv.innerHTML).toEqual('<span>2 - 2 - 2</span>');
   });
-
-  // it('itemsPerPage valueChanges should change rows', () => {
-  //   const resultSubjec$ = new BehaviorSubject<DatasourceResult>({
-  //     data: users,
-  //     recordsFiltered: 2,
-  //     recordsTotal: 2
-  //   });
-  //   const setDatasourceSpy = jest
-  //     .spyOn(serviceStub, 'setDataSource')
-  //     .mockImplementation(
-  //       () => (serviceStub.result$ = resultSubjec$.asObservable())
-  //     );
-
-  //   const interpolateLocalizationSpy = jest
-  //     .spyOn(serviceStub, 'interpolateLocalization')
-  //     .mockImplementation(
-  //       (s, params: { start: number; end: number; total: number }) =>
-  //         `${params.start} - ${params.end} - ${params.total}`
-  //     );
-
-  //   component.datasource = users;
-
-  //   fixture.detectChanges();
-
-  //   expect(setDatasourceSpy).toHaveBeenCalled();
-  //   expect(interpolateLocalizationSpy).toHaveBeenCalled();
-  //   expect(component.rows.length).toEqual(2);
-
-  //   //table
-  //   const table: HTMLTableElement = fixture.nativeElement.querySelector(
-  //     '.ng2-ya-table-table'
-  //   );
-  //   expect(table).toBeTruthy();
-  //   expect(table.rows.length).toEqual(3);
-
-  //   //pagination result
-  //   const paginationResultDiv: HTMLElement =
-  //     fixture.nativeElement.querySelector('.ng2-ya-table-pagination-result');
-  //   expect(paginationResultDiv).toBeTruthy();
-  //   expect(paginationResultDiv.innerHTML).toEqual('<span>1 - 2 - 2</span>');
-
-  //   component.itemsPerPage.setValue(1);
-  //   resultSubjec$.next({
-  //     data: [users[0]],
-  //     recordsFiltered: 2,
-  //     recordsTotal: 2
-  //   });
-  //   fixture.detectChanges();
-
-  //   expect(component.currentPage).toEqual(1);
-  //   expect(table.rows.length).toEqual(2);
-  //   expect(paginationResultDiv.innerHTML).toEqual('<span>1 - 1 - 2</span>');
-  // });
 
   it('fullTextFilter valueChanges should change rows', fakeAsync(() => {
     const resultSubjec$ = new BehaviorSubject<DatasourceResult>({
