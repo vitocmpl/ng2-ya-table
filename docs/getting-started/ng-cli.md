@@ -13,7 +13,7 @@ ng serve
 
 #### Adding ng2-ya-table
  
- - install `ng2-ya-table`, `ngx-bootstrap` and `bootstrap`
+ - install `ng2-ya-table` and `bootstrap`
 
  ```bash
    npm install ng2-ya-table bootstrap --save
