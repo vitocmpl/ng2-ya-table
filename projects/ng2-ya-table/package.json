@@ -18,7 +18,6 @@
   "peerDependencies": {
     "@angular/common": "^13.0.0",
     "@angular/core": "^13.0.0",
-    "bootstrap": "^4.0.0 || ^5.0.0",
-    "ngx-bootstrap": "^8.0.0"
+    "bootstrap": "^4.0.0 || ^5.0.0"
   }
 }

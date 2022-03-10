@@ -1,0 +1,29 @@
+<div class="ng2-ya-table-pagination-wrapper">
+  <select
+    class="form-control form-select ng2-ya-table-items-per-page"
+    [formControl]="itemsPerPageControl"
+  >
+    <option *ngFor="let pn of itemsPerPageOptions" [value]="pn">
+      {{ pn }}
+    </option>
+  </select>
+  <nav aria-label="Search results pages">
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page === 1">
+        <a class="page-link" href (click)="selectPage(page - 1, $event)">{{ previousText }}</a>
+      </li>
+      <li
+        *ngFor="let p of pages"
+        [class.active]="p.active"
+        class="page-item"
+      >
+        <a class="page-link" href (click)="selectPage(p.number, $event)">
+          {{ p.text }}
+        </a>
+      </li>
+      <li class="page-item" [class.disabled]="page === totalPages">
+        <a class="page-link" href (click)="selectPage(page + 1, $event)">{{ nextText }}</a>
+      </li>
+    </ul>
+  </nav>
+</div>

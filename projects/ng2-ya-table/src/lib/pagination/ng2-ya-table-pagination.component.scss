@@ -1,0 +1,13 @@
+.ng2-ya-table-pagination-wrapper {
+  justify-content: center;
+  align-self: center;
+  ul {
+    margin-bottom: 0;
+  }
+  display: flex;
+
+  .ng2-ya-table-items-per-page {
+    margin-right: 1rem;
+    max-width: 5rem;
+  }
+}
